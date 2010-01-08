@@ -73,7 +73,7 @@ over the entire kinematic range foreseen at LHC. A crucial
 feature of the system is the redundancy provided by the DT/RPC 
 (CSC/RPC) independent sub-systems in the Barrel (Endcap) region.
 In particular, the RPC system is able to provide 
-a fast and higly segmented trigger [ref trig TDR], with a 
+a fast and higly segmented trigger, with a 
 sharp \pt threshold, in the rapidity range $|\eta| < 1.6$.
 The independence of the DT and RPC systems can be exploited
 to develop a method for the measurement of the Barrel RPC L1 
@@ -140,10 +140,11 @@ sections. L1 trigger objects are searched
 for independently in each section.
 Sections in the $\eta$ view will be referred as {\em towers},
 and for each tower the partitions in  
-in the $r$-$\phi$ view will be referred as {\em cones}.
+the $r$-$\phi$ view will be referred as {\em cones}.
 
 
 \subsection{Trigger towers}
+\label{sec:trig_towers}
 The definition of the $\eta$ boundaries 
 of towers (see Fig.~\ref{fig:eta_towers}) is based on a set 
 of reference layers.
@@ -168,8 +169,6 @@ the association of roll to towers is not univocally defined.
 The RPC trigger logic has a total of 17 towers.
 A total of 5+5+1 towers are entirely contained in the Barrel.
 
-
-
 \subsection{Trigger cones}
 On the reference layers, the strips are grouped in
 non-overlapping sets of 8 adjacent strips called {\em segments}.
@@ -193,17 +192,26 @@ in each cone. The $\eta$ and $\phi$ coordinate of the trigger
 objects are assigned on the reference station.
 By comparison with predefinite patterns of hits, 
 also a \pt value is assigned to the candidate trigger 
-object. Due to the overlap of adjacent cones, 
-{\em ghost} trigger objects can appear. For this reason, 
-the trigger objects found in a certain $\eta$ tower 
-are processed by a proper ghost identification and removal logic,
-and the remaining ones are sorted according to quality criteria.
- 
-Twelve logical sectors for the trigger system
-are defined along the $r-\phi$ view. Those sectors are all
-$30^\circ$ wide in $\phi$ and are shifted by 
-$10^\circ$ with respect to the phisical sectors of the detector. % (see Fig. ~\ref{fig:trigger_sectors} ).
+object. 
 
+Due to the overlap of adjacent cones, 
+{\em ghost} trigger objects in a certain $\eta$ tower 
+can appear. Ghosts can also appear in adjacent towers 
+due to the sharing of the rolls in non-reference stations. 
+For this reason, trigger candidates are processed by a proper 
+ghost identification and removal logic,
+and the remaining ones are sorted according to quality criteria.
+More details can be found in Ref.~\cite{ref:trig_tdr}.
+
+Finally, the 4 highest \pt muons
+from the Barrel and the 4 highest \pt muons from the
+Endcap are sent to the Global Muon Trigger.
+%Twelve logical sectors for the trigger system
+%are defined along the $r-\phi$ view. Those sectors are all
+%$30^\circ$ wide in $\phi$ and are shifted by 
+%$10^\circ$ with respect to the phisical sectors of the detector. 
+% (see Fig. ~\ref{fig:trigger_sectors} ).
+%
 %\begin{figure}[hbtp]
 %  \begin{center}
 %    \includegraphics[width=0.8\textwidth]{eta_towers}
@@ -212,23 +220,6 @@ $10^\circ$ with respect to the phisical sectors of the detector. % (see Fig. ~\r
 %    \label{fig:trigger_sectors}
 %  \end{center}
 %\end{figure}
-
-
-
-For each of those sectors a single muon candidate can be produced.
-If more than one candidate is present, as in the case of a ghost the best one is selected 
-according to quality criteria of the algorythm: number of hits,
-type of layers fired and \pt of the track.  
-
-Ghosts can also appear in adjacent towers and in adjacent logical sectors
-due to the sharing of the rolls in non-reference stations. 
-
-
-For this reason, trigger candidates from all the towers and sectors
- are further processed for ghosts removal, sorted according to 
-quality criteria, and the 4 highest \pt muons
-from the Barrel and the 4 highest \pt muons from the 
-Endcap are finally sent to the Global Muon Trigger.
 
 \subsection{Cosmic patterns in PACT}
 In order to increase the trigger efficiency for 
@@ -247,11 +238,9 @@ to the track.
 \section{Analysis method}
 We start from a sample of reconstructed tracks 
 in the Muon System which are matched to a DT 
-trigger object. 
-The track is required in order to reject fakes 
-and to have an unambiguous association with a physics object.
-The matching with the DT is done in order to select a sample 
-that has not been triggered exclusively by RPCs.
+trigger object. In this way we reject fakes 
+and define a sample of muons tracks that have not been 
+triggered exclusively by RPCs.
 
 If the number of tracks in the sample is 
 $N_{match}^{DT}$, and under the assumption
@@ -292,7 +281,7 @@ In addition, we apply the following
 cuts:
 \begin{itemize}
 \item
-$\pt$ at the innermost point $ > 5$GeV \ c 
+$\pt$ at the innermost point $ > 5$\GeVc 
 \item
 $N_{hits}$ in the DT $ > 20 $;
 \item
@@ -300,64 +289,56 @@ $\chi^2$ of the track fit $ < 20 $.
 \end{itemize}
 The \pt cut removes tracks which are
 looping in the transverse plane due 
-to the magnetic field.%bending.
-The last two cuts ensure good quality
-of the DT reconstruction and 
-prevent an eventual bias due to 
+to the magnetic field. The last two cuts 
+ensure good quality of the DT reconstruction 
+and prevent an eventual bias due to 
 tracks that would not have been triggered 
 without RPC hits.
-Figures ~\ref{fig:pttrack}, ~\ref{fig:nhitschi2} show the distributions
-of these variables for typical pointing
+Figures ~\ref{fig:pttrack} and ~\ref{fig:nhitschi2} show 
+the distributions of these variables for typical pointing
 CosmicMuon tracks.
 
-\subsection{Track matching with trigger objects}
-The kinematic parameters of the track are the result of the reconstruction.
-The position in $\eta - \phi$ of the L1 trigger for both DTs and RPCs is defined
-on the reference layers. The DT reference layer is station 2 of each wheel.
-In order to match the track to the trigger candidates the track
-is extrapolated to the reference layer of the DTs.
-The extrapolation is done by taking the last point of the track and propagating 
-backwards to the reference Layer using {\em SteppingHelixPropagator},
-an accurate propagation method through the CMS detector
-geometry which takes into account the magnetic field, the 
-energy loss in the detector material and the multiple scattering.
-
-The distributions of $\eta$ and $\phi$ at the reference 
-station for the tracks are shown in Fig. ~\ref{fig:track_eta_phi} 
-
-
-
 \begin{figure}[hbtp]
-
- \begin{minipage}{1.0\textwidth}
-  \begin{center}
- 
-     \includegraphics[width=0.4\textwidth]{chi2_sta}
-     \includegraphics[width=0.4\textwidth]{num_hits_sta}
-       % \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the top part of the detector ( y$ > $ 0 ).}
-\caption{Distribution of the normalized $\chi^2$ (left) and number of DT hits (right) 
-of the cosmic muon track. The tracks with < 5 hits
- are reconstructed through the CSCs chambers. }
-      \label{fig:nhitschi2}
-  \end{center}
-  \end{minipage}
 
      \begin{minipage}{1.0\textwidth}
      \begin{center}
       \includegraphics[width=0.8\textwidth]{pt_sta}
        \caption{ 
-Distribution of the \pt of the cosmic muon tracks 
+Distribution of the \pt of the cosmic muon tracks. 
 }
       \label{fig:pttrack}
-%    \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
   \end{center}
   \end{minipage}
      
-%      \caption{Distribution of the \pt, normalized $\chi^2$ and number of hits in the DT chambers for the cosmic muon tracks }
-
+ \begin{minipage}{1.0\textwidth}
+  \begin{center}
+ 
+     \includegraphics[width=0.4\textwidth]{chi2_sta}
+     \includegraphics[width=0.4\textwidth]{num_hits_sta}
+\caption{Distribution of the normalized $\chi^2$ (left) and number of DT hits (right) 
+of the cosmic muon tracks. The tracks with < 5 hits
+ are reconstructed through the CSCs chambers. }
+      \label{fig:nhitschi2}
+  \end{center}
+  \end{minipage}
 
 \end{figure}
 
+\subsection{Track matching with trigger objects}
+The position in $\eta - \phi$ of the L1 trigger for both DTs and RPCs is defined
+on the reference layer. The RPC reference layers have been described
+in Sec.~\ref{sec:trig_towers}. The DT reference layer is Station 2 
+of each wheel. Thus, in order to match the track to a DT trigger candidate, 
+the track is extrapolated to MB2.
+The extrapolation is done by taking the last point of the track and 
+propagating backwards to the reference layer using 
+the {\em SteppingHelixPropagator},
+an accurate propagation method through the CMS detector
+geometry which takes into account the magnetic field, 
+the energy loss in the detector material and the 
+multiple scattering~\cite{ref:muonreco_note}.
+%The distributions of $\eta$ and $\phi$ at the reference 
+%station for the tracks are shown in Fig. ~\ref{fig:track_eta_phi} 
 
 The track-trigger matching is performed in the $\phi$ coordinate 
 only, which is the most accurate coordinate measured by both 
@@ -365,40 +346,41 @@ DT and RPC trigger systems. It was not possible to use a matching
 in $\eta$ with the L1 DT trigger candidates since the $\eta$ part
 of the algorythm was not commissioned yet during CRAFT08 data taking. 
 The $\phi$ distributions for DT and
-RPC triggers objects are shown in Fig. ~\ref{fig:trigger_eta_phi}
+RPC triggers objects are shown in Fig.~\ref{fig:trigger_eta_phi}
 
 \begin{figure}[hbtp]
   \begin{center}
     \includegraphics[width=0.4\textwidth]{phi_rpc}
     \includegraphics[width=0.4\textwidth]{phi_dt}
-      \caption{Phi distribution of the RPC and DT triggers.}
+      \caption{Phi distribution of the RPC (left) and DT (right) triggers.}
     \label{fig:trigger_eta_phi}
   \end{center}
 \end{figure}
 
-
-We first match the track to a DT trigger.
 The matching requirement is $|\Delta\phi_{t-DT}| < 30^\circ$,
 where $\Delta\phi_{t-DT}$ is the difference 
 between the $\phi$ of the track at the reference layer and
 the $\phi$ of the DT trigger. This loose requirement
 provides a high matching efficiency.
 
-
 If we find a match with a DT trigger, then we proceed
 for matching to an RPC trigger. 
-Figure ~\ref{fig:trigger_residuals} shows the overall $\Delta\phi_{t-RPC}$ as measured 
+Figure~\ref{fig:trigger_residuals} shows the overall $\Delta\phi_{t-RPC}$ as measured 
 using both cosmic patterns and collision patterns (the
 last one obtained by running the trigger emulator).
-
-
+The second peak at $\Delta\phi_{t-RPC} \approx -0.06$ for the residuals distribution 
+of cosmics patterns is due to the fact that the cosmics 
+pattern configuration cannot identify the \pt of the track.
+In case of two candidates with the same quality then the one
+with the smaller $\phi$ is selected.
 
 \begin{figure}[hbtp]
   \begin{center}%
     \includegraphics[width=0.8\textwidth]{residuals_rpc}
 %    \includegraphics[width=0.8\textwidth]{phi_sta}
     \hspace{1cm}
-    \caption{Distribution of the difference between the $\phi$ of the track measured at the reference station and the $\phi$ of the RPC trigger (Run 66783).}
+    \caption{Distribution of the difference between the $\phi$ of the track measured 
+    at the reference station and the $\phi$ of the RPC trigger (Run 66783).}
     \label{fig:trigger_residuals}
   \end{center}
 \end{figure}
@@ -407,15 +389,6 @@ The matching requirement is $|\Delta\phi_{t-RPC}| < 30^\circ$,
 where $\Delta\phi_{t-RPC}$ is the difference 
 between the $\phi$ of the track at the reference layer 
 and the $\phi$ of the RPC trigger.
-
-The second peak at $\phi  \tilde -6$ for the residuals distribution
- of cosmics patterns in Figure ~\ref{fig:trigger_residuals} is due
-to the fact that the cosmics 
-pattern configuration cannot identify the \pt of the track.
-In case of  two candidates with the same quality then the one
-with the smaller $\phi$ is selected.
-
-
 
 \section{Data samples}
 Only cosmic tracks which mimic muons from collisions
@@ -437,9 +410,9 @@ since the pointing skim was not yet
 available. In this case we have filtered the 
 events at the analysis level by applying the same
 requirements used in the pointing skim.
-
 Table~\ref{tab:runs} reports the run numbers analyzed and the detector
 conditions.
+
  \begin{table}[htb]
     \label{tab:runs}
     \begin{center}
@@ -455,9 +428,7 @@ the RPC system are also reported.}
     \end{center}
   \end{table}
 
-
 \section{RPC trigger efficiency in CRAFT08}
-
 For CRAFT08 a dataset was selected in which all the CMS Detector
  was included in the trigger. We studied the trigger efficiency 
 with respect to the \pt of the track and with respect to the position 
