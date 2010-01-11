@@ -286,6 +286,10 @@ $\pt$ at the innermost point $ > 5$\GeVc
 $N_{hits}$ in the DT $ > 20 $;
 \item
 $\chi^2$ of the track fit $ < 20 $.
+\item
+Track passing through a cylinder with the center
+in the interaction point, with the height $h = 260 cm$ parallel to 
+the z axis and a radius $r = 90 cm$ (pointing skim)
 \end{itemize}
 The \pt cut removes tracks which are
 looping in the transverse plane due 
@@ -317,7 +321,9 @@ Distribution of the \pt of the cosmic muon tracks.
      \includegraphics[width=0.4\textwidth]{num_hits_sta}
 \caption{Distribution of the normalized $\chi^2$ (left) and number of DT hits (right) 
 of the cosmic muon tracks. The tracks with < 5 hits
- are reconstructed through the CSCs chambers. }
+ are reconstructed through the CSCs chambers. 
+All distributions are taken before the cuts were applied.
+}
       \label{fig:nhitschi2}
   \end{center}
   \end{minipage}
@@ -428,15 +434,17 @@ the RPC system are also reported.}
     \end{center}
   \end{table}
 
-\section{RPC trigger efficiency in CRAFT08}
-For CRAFT08 a dataset was selected in which all the CMS Detector
- was included in the trigger. We studied the trigger efficiency 
+\section{RPC trigger efficiency}
+For CRAFT08 and CRAFT09 respectively two dataset were selected in which all
+ the RPCs towers were included in the trigger. We studied the trigger efficiency 
 with respect to the \pt of the track and with respect to the position 
 of the track inside the detector.
 
-Plots in Fig. ~\ref{fig:eff_eta_phi_08} show the efficiency of the trigger with respect to the 
+\subsection{Results for CRAFT08}
+
+Plots in Figg. ~\ref{fig:eff_eta_phi_top_08},~\ref{fig:eff_eta_phi_bot_08} show the efficiency of the trigger with respect to the 
 position of the track extrapolated to the reference layer in the $\eta - \phi$
-coordinates. The plot a shows the top part of the detector,
+coordinates.
 for $ 0^\circ < \phi < 180^\circ $ , 
 the plot b shows the bottom part,
 
@@ -444,34 +452,39 @@ for  $ 180^\circ < \phi < 360^\circ $ ,
 
 
 \begin{figure}[hbtp]
-
- \begin{minipage}{1.0\textwidth}
+\begin{minipage}{1.0\textwidth}
   \begin{center}
  
      \includegraphics[width=0.8\textwidth]{eff_eta_phi_top_08}
        % \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the top part of the detector ( y$ > $ 0 ).}
-       \caption{Top part of the detector (y$ > $ 0) }
+       \caption{ Trigger efficiency of the top part of the detector (
+ for $ 0^\circ < \phi < 180^\circ $ ). 
+}
+    \label{fig:eff_eta_phi_top_08}
   \end{center}
   \end{minipage}
 
      \begin{minipage}{1.0\textwidth}
      \begin{center}
       \includegraphics[width=0.8\textwidth]{eff_eta_phi_bot_08}
-       \caption{Bottom part of the detector (y$ < $ 0) }
-%    \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
+       \caption{ Trigger efficiency of the top part of the detector (
+ for $ 180^\circ < \phi < 360^\circ $ ). %The phi  
+}
+    \label{fig:eff_eta_phi_bot_08}
+%   \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
+
+
   \end{center}
   \end{minipage}
      
-      \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer.}
-      \label{fig:eff_eta_phi_08}
+%      \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer.}
+
 
 \end{figure}
 
 
+%From plots 
 
-
-From the plots it is possible to see the geometry of the RPCs on the reference layer 
-in the Barrel.
 
 For plot a, along the $\phi$ coordinate it is possible to see the sectors from 1 to 7.
 The sector 1 and 7 are splitted in half through the two plots, since sector 1 covers the $\phi$
@@ -481,18 +494,6 @@ Along the $\eta$ coordinate it is possible to see separation between the five wh
 
 The inefficiency of the trigger is concentrated in the geometrical regions of the crack 
 between the wheels and sectors.
-
-%The plot Fig. ~\ref{fig:eff_eta_tower_08} shows the efficiency per $\eta$ tower. This integrates 
-%over all the geometric inefficiencies in the $\phi$ direction.
-
-%\begin{figure}[hbtp]
-%  \begin{center}
-%    \includegraphics[width=0.8\textwidth]{eta_towers}
-%2%B    \hspace{1cm}
-%    \caption{Distribution of the trigger efficiency vs $\eta$ tower.}
-%    \label{fig:eff_eta_tower_08}
-%  \end{center}
-%\end{figure}
 
 
 The measurement of the efficiency for our method is based on the assumption that 
@@ -568,74 +569,47 @@ DT vs RPC & $87.93 \pm 0.38 $  \\ \hline
     \end{center}
   \end{table}
 
-%The cuts in the note TRIGGERREF were also applied for our analysis. in order to make 
-%the comparison and the values obtained are reported in table ~\ref{tab:notecuts}
+\subsection{Results for CRAFT09}
 
-% \begin{table}[htb]
-%5    \label{tab:notecuts}
-%    \begin{center}
-%2B      \begin{tabular}{|c|c|} \hline
-%a < $\phi$ < b & \\ \hline
-%c < $\eta$ < d &  \\ \hline
-%      \end{tabular}
-%2%B      \caption{Cuts applied for the comparison with the Tag $\and$ Probe method and values of the efficiency
-%}
-%    \end{center}
-%  \end{table}
-
-
-
-%The () choice of having separate plots for the top and bottom part of the detector
-%is due to the 
-
-\section{RPC trigger efficiency in CRAFT09}
-
-For CRAFT09 a dataset was selected in which all the RPCs
- in the detector were included in the trigger. 
 
 As for CRAFT08 the first study was made to 
 measure the efficiency of the trigger as a function of $\eta - \phi$
-of point of the track on the  reference layer( Fig ~\ref{fig:eff_eta_phi_09}). 
+of point of the track on the  reference layer
+( Figg. ~\ref{fig:eff_eta_phi_top_09}, ~\ref{fig:eff_eta_phi_bot_09}). 
+
 
 
 \begin{figure}[hbtp]
-
- \begin{minipage}{1.0\textwidth}
+\begin{minipage}{1.0\textwidth}
   \begin{center}
  
      \includegraphics[width=0.8\textwidth]{eff_eta_phi_top_09}
        % \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the top part of the detector ( y$ > $ 0 ).}
-       \caption{Top part of the detector (y$ > $ 0) }
+       \caption{ Trigger efficiency of the top part of the detector (
+ for $ 0^\circ < \phi < 180^\circ $ ). 
+}
+    \label{fig:eff_eta_phi_top_09}
   \end{center}
   \end{minipage}
+
      \begin{minipage}{1.0\textwidth}
      \begin{center}
       \includegraphics[width=0.8\textwidth]{eff_eta_phi_bot_09}
-       \caption{Bottom part of the detector (y$ < $ 0) }
-%    \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
+       \caption{ Trigger efficiency of the top part of the detector (
+ for $ 180^\circ < \phi < 360^\circ $ ). %The phi  
+}
+    \label{fig:eff_eta_phi_bot_09}
+%   \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
+
+
   \end{center}
   \end{minipage}
      
-      \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer.}
-      \label{fig:eff_eta_phi_09}
+%      \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer.}
+
 
 \end{figure}
 
-
-
-
-
-%The plot Fig. ~\ref{fig:eff_eta_tower_09} shows the efficiency per $\eta$ tower.
-%This integrates over all the geometric inefficiencies in the $\phi$ direction.
-
-%\begin{figure}[hbtp]
- % \begin{center}
- %   \includegraphics[width=0.8\textwidth]{eta_towers}
- %   \hspace{1cm}
- %   \caption{Distribution of the trigger efficiency vs $\eta$ tower.}
- %   \label{fig:eff_eta_tower_09}
- % \end{center}
-%\end{figure}
 
 
 
