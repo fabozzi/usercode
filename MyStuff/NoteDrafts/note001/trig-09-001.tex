@@ -181,8 +181,6 @@ of strips is grouped into a segment, so that a segment
 covers more than $2.5^\circ$ in those layers.
 Thus adjacent segments overlap in the non-reference layers and 
 the association of a strip to those segments is not univocally defined.
-% The cones appear more 
-%like hourglass shaped partions.
 
 \subsection{The L1 PACT logic}
 The PAttern COmparator Trigger (PACT) logic 
@@ -206,20 +204,6 @@ More details can be found in Ref.~\cite{ref:trig_tdr}.
 Finally, the 4 highest \pt muons
 from the Barrel and the 4 highest \pt muons from the
 Endcap are sent to the Global Muon Trigger.
-%Twelve logical sectors for the trigger system
-%are defined along the $r-\phi$ view. Those sectors are all
-%$30^\circ$ wide in $\phi$ and are shifted by 
-%$10^\circ$ with respect to the phisical sectors of the detector. 
-% (see Fig. ~\ref{fig:trigger_sectors} ).
-%
-%\begin{figure}[hbtp]
-%  \begin{center}
-%    \includegraphics[width=0.8\textwidth]{eta_towers}
-%    \hspace{1cm}
-%    \caption{Trigger logical sectors vs detector physical sectors.}
-%    \label{fig:trigger_sectors}
-%  \end{center}
-%\end{figure}
 
 \subsection{Cosmic patterns in PACT}
 In order to increase the trigger efficiency for 
@@ -260,24 +244,15 @@ Muon System only .
 The two legs of a muon which traverses
 the Tracker System are reconstructed as two separate 
 CosmicMuon tracks.
-%Kinematic parameters of a CosmicMuon track are given 
-%at its {\em innermost position}. Not true anymore
-%For tracks in the top part of the detector
-%the innermost position is located on the outer stations
-%(because the track is going from top to bottom),
-%2Bwhile for tracks in the bottom part it is located 
-%in the inner stations.
 In order to prevent an eventual bias due to tracks 
 that would not have been reconstructed without
 RPC hits, we re-run the reconstruction using DT only.
 
 We select cosmic tracks pointing to the $p$-$p$ interaction
-region by requiring that the muons.
- 
-The above cuts are applied at skim level.
-(definition of TrackerPointing skim).
-
-In addition, we apply the following 
+region by requiring that the track passes through a cylinder 
+centered in the interaction point, with the height parallel 
+to the z axis $h = 260 cm$ and a radius $r = 90 cm$ 
+(definition of TrackerPointing skim). In addition, we apply the following 
 cuts:
 \begin{itemize}
 \item
@@ -286,10 +261,6 @@ $\pt$ at the innermost point $ > 5$\GeVc
 $N_{hits}$ in the DT $ > 20 $;
 \item
 $\chi^2$ of the track fit $ < 20 $.
-\item
-Track passing through a cylinder with the center
-in the interaction point, with the height $h = 260 cm$ parallel to 
-the z axis and a radius $r = 90 cm$ (pointing skim)
 \end{itemize}
 The \pt cut removes tracks which are
 looping in the transverse plane due 
@@ -381,9 +352,8 @@ In case of two candidates with the same quality then the one
 with the smaller $\phi$ is selected.
 
 \begin{figure}[hbtp]
-  \begin{center}%
+  \begin{center}
     \includegraphics[width=0.8\textwidth]{residuals_rpc}
-%    \includegraphics[width=0.8\textwidth]{phi_sta}
     \hspace{1cm}
     \caption{Distribution of the difference between the $\phi$ of the track measured 
     at the reference station and the $\phi$ of the RPC trigger (Run 66783).}
@@ -417,46 +387,42 @@ available. In this case we have filtered the
 events at the analysis level by applying the same
 requirements used in the pointing skim.
 Table~\ref{tab:runs} reports the run numbers analyzed and the detector
-conditions.
+conditions. In these runs all the RPCs towers are included in the trigger.
 
  \begin{table}[htb]
-    \label{tab:runs}
     \begin{center}
-      \begin{tabular}{|c|c|c|c|} \hline
-Dataset & Run   & RPC HV & FEB threshold \\ \hline
-CRAFT08 & 66783 & 9.2 kV & 220 mV \\ \hline
-CRAFT09 & 110409  & 9.4 kV & 220 mV \\ \hline
-CRAFT09 & 110419  & 9.4 kV & 220 mV \\ \hline
+      \begin{tabular}{|c|c|c|c|c|} \hline
+Dataset & Run   & RPC HV & FEB threshold & Average Barrel RPC eff.\\ \hline
+CRAFT08 & 66783 & 9.2 kV & 220 mV & $83.1\%$ \\ \hline
+CRAFT09 & 110409  & 9.4 kV & 220 mV & $93.0\%$ \\ \hline
+CRAFT09 & 110419  & 9.4 kV & 220 mV & $93.0\%$ \\ \hline
       \end{tabular}
       \caption{Analyzed runs from CRAFT08 
-and CRAFT09 datasets. The HV value and FEB thresholds for
-the RPC system are also reported.}
+and CRAFT09 datasets. HV value, FEB thresholds, and average
+efficiency for the barrel RPCs are also reported.}
+    \label{tab:runs}
     \end{center}
   \end{table}
 
 \section{RPC trigger efficiency}
-For CRAFT08 and CRAFT09 respectively two dataset were selected in which all
- the RPCs towers were included in the trigger. We studied the trigger efficiency 
-with respect to the \pt of the track and with respect to the position 
-of the track inside the detector.
+%For CRAFT08 and CRAFT09 respectively we consider two datasets in which all 
+%the RPCs towers are included in the trigger. 
+We study the trigger efficiency with respect to the \pt of the track and 
+with respect to the position of the track on the reference layer.
 
 \subsection{Results for CRAFT08}
+Figures~\ref{fig:eff_eta_phi_top_08},~\ref{fig:eff_eta_phi_bot_08} show 
+the RPC trigger efficiency with respect as a function of the $\eta - \phi$
+of the track on the reference layer. 
 
-Plots in Figg. ~\ref{fig:eff_eta_phi_top_08},~\ref{fig:eff_eta_phi_bot_08} show the efficiency of the trigger with respect to the 
-position of the track extrapolated to the reference layer in the $\eta - \phi$
-coordinates.
-for $ 0^\circ < \phi < 180^\circ $ , 
+For $ 0^\circ < \phi < 180^\circ $ , 
 the plot b shows the bottom part,
-
 for  $ 180^\circ < \phi < 360^\circ $ , 
-
 
 \begin{figure}[hbtp]
 \begin{minipage}{1.0\textwidth}
   \begin{center}
- 
      \includegraphics[width=0.8\textwidth]{eff_eta_phi_top_08}
-       % \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the top part of the detector ( y$ > $ 0 ).}
        \caption{ Trigger efficiency of the top part of the detector (
  for $ 0^\circ < \phi < 180^\circ $ ). 
 }
@@ -467,24 +433,14 @@ for  $ 180^\circ < \phi < 360^\circ $ ,
      \begin{minipage}{1.0\textwidth}
      \begin{center}
       \includegraphics[width=0.8\textwidth]{eff_eta_phi_bot_08}
-       \caption{ Trigger efficiency of the top part of the detector (
- for $ 180^\circ < \phi < 360^\circ $ ). %The phi  
+       \caption{ Trigger efficiency of the bottom part of the detector (
+ for $ 180^\circ < \phi < 360^\circ $ ).
 }
     \label{fig:eff_eta_phi_bot_08}
-%   \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
-
-
   \end{center}
   \end{minipage}
      
-%      \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer.}
-
-
 \end{figure}
-
-
-%From plots 
-
 
 For plot a, along the $\phi$ coordinate it is possible to see the sectors from 1 to 7.
 The sector 1 and 7 are splitted in half through the two plots, since sector 1 covers the $\phi$
@@ -507,14 +463,7 @@ in the central regions of the rolls.
 
 The choice of the cuts is shown in table ~\ref{tab:volumecuts}. 
 
-
-
-
-%Table~\ref{tab:volumecuts} reports the run numbers analyzed and the relevant
-%conditions.
-
  \begin{table}[htb]
-    \label{tab:volumecuts}
     \begin{center}
       \begin{tabular}{|c|c|} \hline
   $   |\phi - \phi_{center} | < 5^o $ & \\ \hline
@@ -523,6 +472,7 @@ The choice of the cuts is shown in table ~\ref{tab:volumecuts}.
       \caption{Volume cuts applied to select the center of the sectors.
        $\phi_{center}$ is the value of $\phi$ at the center of the sector. 
 }
+    \label{tab:volumecuts}
     \end{center}
   \end{table}
 
@@ -543,20 +493,13 @@ the volu mecuts.
 The efficiency gets in plateau after about \pt $\simeq 40 GeV/c$ . 
 
 
-%The average efficiency in the fiducial volume is: 
-%87.77 $\%$ $\pm 0.15$ 
-
-
-
-
-A comparison has been made between this measurement and the measurement done in \cite{ref:mupaper}  %~\ref{antrigger}
-with  the Tag \& Probe method.
+A comparison has been made between this measurement and the measurement done in \cite{ref:mupaper} 
+with the Tag and Probe method.
 
 The comparison was made on the top part of the detector,
  since the bottom part was used for the tagging:
 
  \begin{table}[htb]
-    \label{tab:notecomparison}
     \begin{center}
       \begin{tabular}{|c|c|} \hline
 Tag \& Probe: & $88.02 \pm 0.22 $ \\ \hline
@@ -566,18 +509,15 @@ DT vs RPC & $87.93 \pm 0.38 $  \\ \hline
      \end{tabular}
       \caption{Cuts applied for the comparison with the Tag $\and$ Probe method and values of the efficiency
 }
+    \label{tab:notecomparison}
     \end{center}
   \end{table}
 
 \subsection{Results for CRAFT09}
-
-
 As for CRAFT08 the first study was made to 
 measure the efficiency of the trigger as a function of $\eta - \phi$
 of point of the track on the  reference layer
-( Figg. ~\ref{fig:eff_eta_phi_top_09}, ~\ref{fig:eff_eta_phi_bot_09}). 
-
-
+(Figures~\ref{fig:eff_eta_phi_top_09} and~\ref{fig:eff_eta_phi_bot_09}). 
 
 \begin{figure}[hbtp]
 \begin{minipage}{1.0\textwidth}
@@ -595,32 +535,23 @@ of point of the track on the  reference layer
      \begin{minipage}{1.0\textwidth}
      \begin{center}
       \includegraphics[width=0.8\textwidth]{eff_eta_phi_bot_09}
-       \caption{ Trigger efficiency of the top part of the detector (
- for $ 180^\circ < \phi < 360^\circ $ ). %The phi  
+       \caption{ Trigger efficiency of the bottom part of the detector (
+ for $ 180^\circ < \phi < 360^\circ $ ).
 }
     \label{fig:eff_eta_phi_bot_09}
-%   \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer for the bottom part of the detector ( y $ < $ 0 ).}
-
 
   \end{center}
   \end{minipage}
      
-%      \caption{Distribution of the trigger efficiency vs $\eta$ and $\phi$ of the tracks on the reference layer.}
-
-
 \end{figure}
 
-
-
-
-
-The plot Fig. ~\ref{fig:eff_pt_09_vs_08} shows the efficiency vs the
+The plot Fig.~\ref{fig:eff_pt_09_vs_08} shows the efficiency vs the
 \pt of the cosmics tracks after the cuts shown in table
 ~\ref{tab:volumecuts}. On the same plot it is shown 
 the efficiency of CRAFT08 for a comparison.
 An explaination for the difference between the efficiencies
 is given in section FIXME 
-
+The efficiency for CRAFT09 is already in plateau at after the cut.
 
 \begin{figure}[hbtp]
   \begin{center}
@@ -631,178 +562,43 @@ is given in section FIXME
   \end{center}
 \end{figure}
 
+\subsection{Comparison of CRAFT08 vs. CRAFT09 performances}
+The plot in Fig.~\ref{fig:eff_pt_09_vs_08} shows the comparison between 
+the trigger efficiency vs \pt in CRAFT08 vs CRAFT09, where a difference
+of about $7-8 \% $ in the efficiency plateau is evident.
 
-The efficiency for CRAFT09 is already in plateau at after the cut.% \pt $\simeq 20 GeV/c$ . 
+At the same time, as seen from Table~\ref{tab:runs}, also the average Barrel RPCs 
+efficiency increases from $83.1\%$ in CRAFT08 to $93.0\%$ in CRAFT09, thanks to the HV increase 
+from $9.2$ to $9.4$ kV and to the fixing of many problems during the commissioning 
+effort in CRAFT08 (see also~\cite{ref:craft08pap}). The sensitivity of trigger performances 
+to the change of chambers efficiency from CRAFT08
+to CRAFT09 can be explained with the geometry of trigger
+towers, which has not been optimized for cosmic muons. For this reason,
+a fewer number of RPC is likely to be traversed by a cosmic track 
+in a trigger cone with respect to a muon from collisions. For instance, if the average number 
+of chambers traversed by a track in a cone is 4, we get with a simple calculation 
+a trigger probability of $86.5\%$ for RPC efficiency as of CRAFT08, and a trigger probability of 
+$97.3\%$ for RPC efficiency as of CRAFT09. 
+Of course, a detailed study of this effect should take into account the exact geometry of the 
+cones and the detailed chambers efficiencies.
+In any case, we do not expect such critical trigger behaviour in collisions because 
+of the highly optimized cones geometry and trigger patterns for these muons.
 
-
-%The average efficiency in the fiducial volume is:
-% 95,9 $\%$ $\pm$ 
-
-
-
-
-\section{Discussion: CRAFT08 vs. CRAFT09}
-
-
-The plot in Fig ~\ref{fig:eff_pt_09_vs_08} shows the comparison between 
-the trigger efficiency vs \pt in CRAFT08 vs CRAFT09.
-%The comparison is done after the choice of volume cuts in Table ~\ref{tab:volumecuts} .
-
-%\begin{figure}[hbtp]
-%  \begin{center}
-%    \includegraphics[width=0.8\textwidth]{eta_towers}
-%    \hspace{1cm}
-%    \caption{Distribution of the trigger efficiency vs \pt of the tracks.}
-%    \label{fig:eff_pt_09_vs_08}
-%  \end{center}
-%\end{figure}
-
-
-This plot shows a differnce of about $7-8 \% $  in the efficiency plateau region.
-
-%In the case where all the RPCs have the same efficiency, 
-
-Some considerations can be done to explain this difference.
-
-In the cosmics pattern configuration the trigger is basically
-a majority of 3 over 6 ( or 3 over 5) layers fired in the
-same logical cone( see section FIXME ).
-
-For a given a track in the muon system,
-the number of hits in a logical cone
-depends from the geometry of the cone and 
-from the intrinsic efficiency of the RPC chambers
-
-\subsection{The difference in detector efficiency }
-
-Table ~\ref{tab:meaneffs} reports the mean values the efficiency 
-for the barrel chambers for the two runs considered.
-
-The increase in the RPC efficiency is due to the increase of the 
-voltage from $9.2$ to $9.4$ kV and to the fixing of many problems 
-of the detector done during CRAFT08 (see also \cite{ref:craft08pap} ).
-
-The fourth column is the probability of having 3 layers fired
-in the $``best''$ case where a track has 
-geometrically crossed 6 out of 6 layers inside a 
-logical cone ( $\epsilon_{6}$)
-The fifth column is the 
-probability of having 3 layers fired
-in the  $ ``worst''$ case where
-a track has geometrically crossed 3 out of 6 layers inside a 
-logical cone ( $\epsilon_{3}$ ).
-This calculation has been done
-assuming that all detectors had efficiency equals to mean efficiency.
-
-
-\begin{table}[htb]
-  \label{tab:meaneffs}
-    \begin{center}
-      \begin{tabular}{|c|c|c|c|c|} \hline
-Run & Mean efficiency in the Barrel & Voltage & $\epsilon_{6}$ & $\epsilon_{3}$\\ \hline
-11409 &	$92.96 \%$ & 9.4 & $99.97 \%$ & $77.86 \%$  \\ \hline
-66783 & $83.11 \%$ & 9.2 & $99.2 \%$ & $57.17 \%$ \\ \hline
-      \end{tabular}
-         \caption{ Mean efficiency of the chambers in the barrel, voltage and trigger efficiency in the $``best''$ case and in the $``worst''$ case 
-}
- \end{center}
-\end{table} 
-
-We can see that in the $ ``best'' $ case the 
-difference of the detector efficiency changes the $\epsilon_{trigger}$ 
-by less than $1\%$.
-In the  $ ``worst''$ case the $\epsilon_{trigger}$ changes by more than $20\%$.
-
-
-The trigger efficiency will also take into account
-all the intermediate cases, depending on the geometry of the cones. 
-
-\subsection{The dependence on the cone geometry}
-
-In order to quantitatively evaluate the weight of all possible cases,
-the trigger efficiency in a given logical cone should be evaluated as:
-
-\begin{equation}
-\label{efficiency}
-\epsilon_{trigger} = \sum_{i=3}^{i=6(5)}\prod_{combination j of i detectors} \epsilon_{geom,i,j} * \epsilon_{RPC,i,j}    
-\end{equation} 
-\\
-
-where:\\
-\begin{itemize}
-\item $\epsilon_{geom,i,j}$ is the geometric acceptance of
- the cone for the combination $j$ of $i$ detectors
-\item $\epsilon_{RPC,i,j}$ is the the probability that 
-at least 3 RPC layers were fired amongst the $i$ detectors
-geometrically intersected by the track
-\end{itemize}
-
-
-In order to quantitatively measure the weight of geometric factors
-$\epsilon_{geom,i,j}$ further studies need to be done. 
-
-%So the critical dependence we observe
-%of the trigger efficiency from
-%the efficiency of the chambers 
-
-%This means that even if a track is reconstructed and it 
-%has fired more than 3 RPC layers, it will not generate
-%a L1 Trigger candidate if there are not 3 hits in the same
-%logical cone.
-
-However, we can observe that the logical cones
-are optimized for tracks strictly pointing to
-the interaction point. The pointing skim 
-for  cosmics only requires that the tracks
-are passing through the geometrical region of the tracker ( see section FIXME ).
-
-This is a feature that is deeply embedded in the trigger electronics,
-so it would have been impossible to change it for cosmics data taking.
-
-
-
-\Section{Conclusions}
-
-A method to measure the L1 RPC trigger efficiency has been developed.
-It has been applied on cosmics data from CRAFT08 and 09, showing a significative 
-improvement of the trigger efficiency.
-
-The algorythm has already been included in the RPC Prompt Analysis framework.
-
-
-
-
-The method has been indirectly validated
- through a comparison with the Tag and Probe 
-method on CRAFT08 data, showing reasonable 
-agreement between the two methods in the fiducial 
-region described in section FIXME.
-
-
-The main features of this algorythm are the following:
-
-\begin{itemize} 
-\item It can be used to measure the efficiency for channels
- where there are not 2 muons back to back ( all W channels, Top channel etc )
-\item It can be adapted to measure the DT and CSC trigger efficiency.
-\item It might present a bias in the non-fiducial regions. This matter has still 
-to be investigated.
-\end{itemize} 
-
-
-Further validation can be done on MonteCarlo by comparing its 
+\section{Conclusions}
+A method to measure the L1 RPC trigger efficiency has been developed,
+which exploits as efficiency probes muon tracks matched to a DT trigger. 
+It can be used to measure the trigger efficiency also for channels where 
+there are not two back-to-back muons (W channels, top channel, etc.).
+The method has been validated by comparing with results based on the Tag and Probe 
+technique on CRAFT08 data, showing a reasonable agreement.
+The method has also been applied on cosmics data from CRAFT08 and CRAFT09
+samples for Barrel RPCs, showing a significative improvement of the trigger efficiency.
+Further validation, to understand in particular the effect of possible residual correlations
+between DT and RPC triggers in the fiducial region, can be done on Monte Carlo by comparing 
 results with MC truth.
+
+The algorythm has been included in the RPC Prompt Analysis framework.
 
 %% References
 \bibliography{auto_generated}
-
-%
-%\begin{figure}[hbtp]
-%  \begin{center}
-%    \includegraphics[width=0.2\textwidth]{CMS-bw-logo}\hspace{1cm}\includegraphics[width=0.2\textwidth]{CMScol}
-%    \hspace{1cm}
-%    \caption{Figures inserted using includegraphics.}
-%    \label{fig:ex1}
-%  \end{center}
-%\end{figure}
 
