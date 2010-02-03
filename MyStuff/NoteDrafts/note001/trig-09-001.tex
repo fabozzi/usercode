@@ -392,13 +392,13 @@ relevant detector conditions.
  \begin{table}[htb]
     \begin{center}
       \begin{tabular}{|c|c|c|c|c|} \hline
-Dataset & Run   & RPC HV & FEB threshold & Average Barrel RPC eff.\\ \hline
-CRAFT08 & 66783 & 9.2 kV & 220 mV & $83.1\%$ \\ \hline
-CRAFT09 & 110409  & 9.4 kV & 220 mV & $93.0\%$ \\ \hline
-CRAFT09 & 110419  & 9.4 kV & 220 mV & $93.0\%$ \\ \hline
+Dataset & Run   & RPC HV & Average Barrel RPC eff.\\ \hline
+CRAFT08 & 66783 & 9.2 kV & $82.41\%$ \\ \hline
+CRAFT09 & 110409  & 9.4 kV & $92.05\%$ \\ \hline
+CRAFT09 & 110419  & 9.4 kV & $91.67\%$ \\ \hline
       \end{tabular}
       \caption{Analyzed runs from CRAFT08 
-and CRAFT09 datasets. HV value, FEB thresholds, and average
+and CRAFT09 datasets. HV value and average
 efficiency for the barrel RPCs are also reported.}
     \label{tab:runs}
     \end{center}
@@ -598,22 +598,26 @@ a value $\epsilon_{09} = 98.01 \pm 0.08 % $.
 The results shown in the previous sections show a differece of about
 $9 \% $ between the plateau efficiencies $\epsilon_{08}$ and $\epsilon_{09}$.
 At the same time, as seen from Table~\ref{tab:runs}, also the average Barrel RPCs 
-efficiency increases from $83.1\%$ in CRAFT08 to $93.0\%$ in CRAFT09, thanks to the HV increase 
-from $9.2$ to $9.4$ kV and to the fixing of many problems during the commissioning 
-effort in CRAFT08 (see also~\cite{ref:craft08pap}). The sensitivity of trigger performances 
-to the change of chambers efficiency from CRAFT08
-to CRAFT09 can be explained with the geometry of trigger
-towers, which has not been optimized for cosmic muons. For this reason,
-a fewer number of RPC is likely to be traversed by a cosmic track 
-in a trigger cone with respect to a muon from collisions. For instance, if the average number 
-of chambers traversed by a track in a cone is 4, we get with a simple calculation 
-a trigger probability of $86.5\%$ for RPC 
-efficiency as of CRAFT08, and a trigger probability of 
-$97.3\%$ for RPC efficiency as of CRAFT09. 
-Of course, a detailed study of this effect should take into account the exact geometry of the 
-cones and the detailed chambers efficiencies.
-In any case, we do not expect such critical trigger behaviour in collisions because 
-of the highly optimized cones geometry and trigger patterns for these muons.
+efficiency increases from $82.41\%$ in CRAFT08 to $92.05\%$ in CRAFT09, thanks
+ to the HV increase from $9.2$ to $9.4$ kV and to the
+ fixing of many problems during the commissioning 
+effort in CRAFT08 (see also~\cite{ref:craft08pap}).
+
+%The sensitivity of trigger performances 
+%to the change of chambers efficiency from CRAFT08
+%to CRAFT09 can be explained with the geometry of trigger
+%towers, which has not been optimized for cosmic muons. For this reason,
+%a fewer number of RPC is likely to be traversed by a cosmic track 
+%2Bin a trigger cone with respect to a muon from collisions. For instance, if the average number 
+%of chambers traversed by a track in a cone is 4, we get with a simple calculation 
+%a trigger probability of $86.5\%$ for RPC 
+%efficiency as of CRAFT08, and a trigger probability of 
+%$97.3\%$ for RPC efficiency as of CRAFT09. 
+To do a sistematic  study of the  dependancy of the trigger efficiency 
+from the efficiency of the chambers the geometry of the  cones  
+has to be taken into account.
+%In any case, we do not expect such critical trigger behaviour in collisions because 
+%of the highly optimized cones geometry and trigger patterns for these muons.
 
 \section{Conclusions}
 A method to measure the L1 RPC trigger efficiency has been developed.
