@@ -42,7 +42,7 @@ with a muon sample triggered by the DT system}
 % redefined to do so, but it should be fixed as of the final release date.
 %\date{\today}
 
-% note that you cannot use \verb in the abstract text
+%b note that you cannot use \verb in the abstract text
 \abstract{
     We present a study of the L1 trigger efficiency for RPCs in the
     Barrel of the CMS Muon System. The method exploits the independency of the
@@ -262,7 +262,7 @@ $N_{hits}$ in the DT $ > 20 $;
 $\chi^2$ of the track fit $ < 20 $.
 \end{itemize}
 The \pt cut removes tracks which are
-looping in the transverse plane due 
+bending in the transverse plane due 
 to the magnetic field. The last two cuts 
 ensure good quality of the DT reconstruction 
 and prevent an eventual bias due to 
@@ -278,7 +278,7 @@ CosmicMuon tracks.
      \begin{center}
       \includegraphics[width=0.8\textwidth]{pt_sta}
        \caption{ 
-Distribution of the \pt of the cosmic muon tracks. 
+Distribution of the \pt of the cosmic muon tracks (CRAFT08, Run 66783). 
 }
       \label{fig:pttrack}
   \end{center}
@@ -292,7 +292,7 @@ Distribution of the \pt of the cosmic muon tracks.
 \caption{Distribution of the normalized $\chi^2$ (left) and number of DT hits (right) 
 of the cosmic muon tracks. The tracks with $< 5$ hits
 are reconstructed through the CSCs chambers. 
-All distributions are taken before the cuts were applied.
+All distributions are taken before the cuts were applied (CRAFT08, Run 66783).
 }
       \label{fig:nhitschi2}
   \end{center}
@@ -322,13 +322,13 @@ DT and RPC trigger systems. It was not possible to use a matching
 in $\eta$ with the L1 DT trigger candidates since the $\eta$ part
 of the algorythm was not commissioned yet during CRAFT08 data taking. 
 The $\phi$ distributions for DT and RPC trigger
-objects are shown in Fig.~\ref{fig:trigger_eta_phi}
+objects are shown in Fig.~\ref{fig:trigger_eta_phi}.
 
 \begin{figure}[hbtp]
   \begin{center}
     \includegraphics[width=0.4\textwidth]{phi_rpc}
     \includegraphics[width=0.4\textwidth]{phi_dt}
-      \caption{Phi distribution of the RPC (left) and DT (right) triggers.}
+      \caption{Phi distribution of the RPC (left) and DT (right) triggers (CRAFT08, Run 66783).}
     \label{fig:trigger_eta_phi}
   \end{center}
 \end{figure}
@@ -339,8 +339,7 @@ between the $\phi$ of the track at the reference layer and
 the $\phi$ of the DT trigger. This loose requirement
 provides a high matching efficiency.
 
-If we find a match with a DT trigger, then we proceed
-for matching to an RPC trigger. 
+If a match with a DT trigger is found, a RPC trigger that matches the track is looked for. 
 Figure~\ref{fig:trigger_residuals} shows the overall $\Delta\phi_{t-RPC}$ as measured 
 using both cosmic patterns and collision patterns (the
 last one obtained by running the trigger emulator).
@@ -354,14 +353,13 @@ with the smaller $\phi$ is selected.
   \begin{center}
     \includegraphics[width=0.8\textwidth]{residuals_rpc}
     \hspace{1cm}
-    \caption{Distribution of the difference between the $\phi$ of the track measured 
-    at the reference station and the $\phi$ of the RPC trigger (Run 66783).}
+    \caption{Distribution of the difference $\Delta\phi_{SA-RPC}$ between the $\phi_$ of the StandAlone track measured at the reference station and the $\phi$ of the RPC trigger (CRAFT08, Run 66783).}
     \label{fig:trigger_residuals}
   \end{center}
 \end{figure}
 
-The matching requirement is $|\Delta\phi_{t-RPC}| < 30^\circ$,
-where $\Delta\phi_{t-RPC}$ is the difference 
+The matching requirement is $|\Delta\phi_{SA-RPC}| < 30^\circ$,
+where $\Delta\phi_{sA-RPC}$ is the difference 
 between the $\phi$ of the track at the reference layer 
 and the $\phi$ of the RPC trigger.
 
@@ -558,7 +556,7 @@ track, extrapolated to the reference layer.
 \begin{figure}[hbtp]
      \begin{center}
       \includegraphics[width=0.9\textwidth]{eff_eta_phi_bot_09_new}
-       \caption{RPC trigger efficiency iin CRAFT09 as a function of $\eta$ and $\phi$
+       \caption{RPC trigger efficiency in CRAFT09 as a function of $\eta$ and $\phi$
        for tracks in the bottom part of the Barrel detector
        ($ 180^\circ < \phi < 360^\circ $). The $\eta$ and $\phi$ coordinates are
        extrapolated to the reference layer.
