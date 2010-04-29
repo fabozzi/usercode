@@ -18,7 +18,31 @@ process.GlobalTag.globaltag = "GR_R_35X_V5::All"
 ### source
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-    '/store/data/Commissioning10/MinimumBias/RAW-RECO/v8/000/132/601/EC82F50B-F040-DF11-8386-00E08179172F.root'
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_1.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_10.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_11.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_12.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_13.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_14.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_15.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_16.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_17.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_18.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_19.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_2.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_20.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_21.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_22.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_23.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_24.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_3.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_4.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_5.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_6.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_7.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_8.root',
+        '/store/caf/user/zgecse/ExpressPhysics/MuonSkimRun132442/f0601f8811b55c14db6d8c9933fe28c2/MuonSkim_9.root'
+        #    '/store/data/Commissioning10/MinimumBias/RAW-RECO/v8/000/132/601/EC82F50B-F040-DF11-8386-00E08179172F.root'
    ),
 )
 
@@ -84,6 +108,33 @@ process.goodGlobalMuons = cms.EDFilter("CandViewSelector",
 process.validHitsSelector = cms.EDFilter("MuonValidHitsSelector",
   src = cms.InputTag("goodGlobalMuons"),
 )
+
+
+###############################################
+# Re-make muon reco without RPC hits
+# standalone muons
+process.load("RecoMuon.StandAloneMuonProducer.standAloneMuons_cff")
+process.standAloneMuonsNoRPC = process.standAloneMuons.clone()
+process.standAloneMuonsNoRPC.STATrajBuilderParameters.FilterParameters.EnableRPCMeasurement = cms.bool(False)
+process.standAloneMuonsNoRPC.STATrajBuilderParameters.BWFilterParameters.EnableRPCMeasurement = cms.bool(False)
+# global muons
+process.load("RecoMuon.GlobalMuonProducer.GlobalMuonProducer_cff")
+process.globalMuonsNoRPC = process.globalMuons.clone()
+process.globalMuonsNoRPC.MuonCollectionLabel = cms.InputTag("standAloneMuonsNoRPC","UpdatedAtVtx")
+process.muontrackingNoRPC = cms.Sequence(
+    process.standAloneMuonsNoRPC *
+    process.globalMuonsNoRPC
+)
+
+# muons
+process.load("RecoMuon.MuonIdentification.muons_cfi")
+process.muonsNoRPC = process.muons.clone()
+process.muonsNoRPC.inputCollectionLabels = cms.VInputTag(cms.InputTag("generalTracks"),cms.InputTag("globalMuonsNoRPC"),cms.InputTag("standAloneMuonsNoRPC","UpdatedAtVtx"))
+process.muonsNoRPC.fillGlobalTrackQuality = False
+
+process.muonIdProducerSequenceNoRPC = cms.Sequence(
+    process.muonsNoRPC
+)
                                          
 ### paths
 
@@ -93,7 +144,9 @@ process.rpcSkimTrackerMuonPath = cms.Path(
   process.primaryVertexFilter +
   process.scrapingFilter +
   process.goodTrackerMuons +
-  process.idTrackerMuons 
+  process.idTrackerMuons +
+  process.muontrackingNoRPC +
+  process.muonIdProducerSequenceNoRPC
 )
 
 process.rpcSkimGlobalMuonPath1 = cms.Path(
@@ -103,7 +156,10 @@ process.rpcSkimGlobalMuonPath1 = cms.Path(
   process.scrapingFilter +
   ~process.goodTrackerMuons +
   process.goodGlobalMuons +
-  process.validHitsSelector  
+  process.validHitsSelector +
+  process.muontrackingNoRPC +
+  process.muonIdProducerSequenceNoRPC
+  
 )
 
 process.rpcSkimGlobalMuonPath2 = cms.Path(
@@ -114,7 +170,9 @@ process.rpcSkimGlobalMuonPath2 = cms.Path(
   process.goodTrackerMuons +
   ~process.idTrackerMuons +
   process.goodGlobalMuons +
-  process.validHitsSelector  
+  process.validHitsSelector + 
+  process.muontrackingNoRPC +
+  process.muonIdProducerSequenceNoRPC
 )
 
 # Output module configuration
@@ -123,7 +181,15 @@ from Configuration.EventContent.EventContent_cff import *
 rpcSkimEventContent = cms.PSet(
     outputCommands = cms.untracked.vstring()
 )
+
+noRPCMuonsContent = cms.PSet(
+    outputCommands = cms.untracked.vstring(
+      'keep *_*NoRPC_*_*'
+      )
+    )
+
 rpcSkimEventContent.outputCommands.extend(RECOEventContent.outputCommands)
+rpcSkimEventContent.outputCommands.extend(noRPCMuonsContent.outputCommands)
 
 rpcSkimEventSelection = cms.PSet(
     SelectEvents = cms.untracked.PSet(
@@ -140,7 +206,7 @@ process.rpcSkimOutputModule = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('RPCSkim'),
         dataTier = cms.untracked.string('USER')
    ),
-   fileName = cms.untracked.string('rpcSkim_data.root')
+   fileName = cms.untracked.string('file:/tmp/fabozzi/rpcSkim_dataNew.root')
 )
 
 process.outpath = cms.EndPath(process.rpcSkimOutputModule)
