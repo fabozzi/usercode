@@ -135,7 +135,23 @@ process.muonsNoRPC.fillGlobalTrackQuality = False
 process.muonIdProducerSequenceNoRPC = cms.Sequence(
     process.muonsNoRPC
 )
-                                         
+
+
+###############################################
+# Make muon digis and unpack L1Gt info
+from CondCore.DBCommon.CondDBSetup_cfi import *
+
+import EventFilter.RPCRawToDigi.rpcUnpacker_cfi
+process.muonRPCDigis = EventFilter.RPCRawToDigi.rpcUnpacker_cfi.rpcunpacker.clone()
+process.load("EventFilter.L1GlobalTriggerRawToDigi.l1GtUnpack_cfi")
+
+process.rawProd = cms.Sequence(
+   process.muonRPCDigis +
+   process.l1GtUnpack
+)
+
+
+###############################################
 ### paths
 
 process.rpcSkimTrackerMuonPath = cms.Path(
@@ -146,7 +162,8 @@ process.rpcSkimTrackerMuonPath = cms.Path(
   process.goodTrackerMuons +
   process.idTrackerMuons +
   process.muontrackingNoRPC +
-  process.muonIdProducerSequenceNoRPC
+  process.muonIdProducerSequenceNoRPC +
+  process.rawProd
 )
 
 process.rpcSkimGlobalMuonPath1 = cms.Path(
@@ -158,8 +175,8 @@ process.rpcSkimGlobalMuonPath1 = cms.Path(
   process.goodGlobalMuons +
   process.validHitsSelector +
   process.muontrackingNoRPC +
-  process.muonIdProducerSequenceNoRPC
-  
+  process.muonIdProducerSequenceNoRPC +
+  process.rawProd  
 )
 
 process.rpcSkimGlobalMuonPath2 = cms.Path(
@@ -172,7 +189,8 @@ process.rpcSkimGlobalMuonPath2 = cms.Path(
   process.goodGlobalMuons +
   process.validHitsSelector + 
   process.muontrackingNoRPC +
-  process.muonIdProducerSequenceNoRPC
+  process.muonIdProducerSequenceNoRPC +
+  process.rawProd  
 )
 
 # Output module configuration
@@ -184,7 +202,10 @@ rpcSkimEventContent = cms.PSet(
 
 noRPCMuonsContent = cms.PSet(
     outputCommands = cms.untracked.vstring(
-      'keep *_*NoRPC_*_*'
+      'keep *_*NoRPC_*_*',
+      'keep L1MuRegionalCand*_*_*_*',
+      'keep *_muonRPCDigis_*_*',
+      'keep L1GlobalTriggerObjectMapRecord*_*_*_*'
       )
     )
 
