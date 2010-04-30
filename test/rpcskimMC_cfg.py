@@ -69,13 +69,52 @@ process.validHitsSelector = cms.EDFilter("MuonValidHitsSelector",
   src = cms.InputTag("goodGlobalMuons"),
 )
                                          
+###############################################
+# Re-make muon reco without RPC hits
+# standalone muons
+process.load("RecoMuon.StandAloneMuonProducer.standAloneMuons_cff")
+process.standAloneMuonsNoRPC = process.standAloneMuons.clone()
+process.standAloneMuonsNoRPC.STATrajBuilderParameters.FilterParameters.EnableRPCMeasurement = cms.bool(False)
+process.standAloneMuonsNoRPC.STATrajBuilderParameters.BWFilterParameters.EnableRPCMeasurement = cms.bool(False)
+# global muons
+process.load("RecoMuon.GlobalMuonProducer.GlobalMuonProducer_cff")
+process.globalMuonsNoRPC = process.globalMuons.clone()
+process.globalMuonsNoRPC.MuonCollectionLabel = cms.InputTag("standAloneMuonsNoRPC","UpdatedAtVtx")
+process.muontrackingNoRPC = cms.Sequence(
+    process.standAloneMuonsNoRPC *
+    process.globalMuonsNoRPC
+)
+
+# muons
+process.load("RecoMuon.MuonIdentification.muons_cfi")
+process.muonsNoRPC = process.muons.clone()
+process.muonsNoRPC.inputCollectionLabels = cms.VInputTag(cms.InputTag("generalTracks"),cms.InputTag("globalMuonsNoRPC"),cms.InputTag("standAloneMuonsNoRPC","UpdatedAtVtx"))
+process.muonsNoRPC.fillGlobalTrackQuality = False
+
+process.muonIdProducerSequenceNoRPC = cms.Sequence(
+    process.muonsNoRPC
+)
+
+###############################################
+# Unpack L1Gt info
+process.load("EventFilter.L1GlobalTriggerRawToDigi.l1GtUnpack_cfi")
+
+process.rawProd = cms.Sequence(
+   process.l1GtUnpack
+)
+
+
+###############################################
 ### paths
 
 process.rpcSkimTrackerMuonPath = cms.Path(
   process.primaryVertexFilter +
   process.scrapingFilter +
   process.goodTrackerMuons +
-  process.idTrackerMuons 
+  process.idTrackerMuons +
+  process.muontrackingNoRPC +
+  process.muonIdProducerSequenceNoRPC +
+  process.rawProd
 )
 
 process.rpcSkimGlobalMuonPath1 = cms.Path(
@@ -83,7 +122,10 @@ process.rpcSkimGlobalMuonPath1 = cms.Path(
   process.scrapingFilter +
   ~process.goodTrackerMuons +
   process.goodGlobalMuons +
-  process.validHitsSelector  
+  process.validHitsSelector +
+  process.muontrackingNoRPC +
+  process.muonIdProducerSequenceNoRPC +
+  process.rawProd
 )
 
 process.rpcSkimGlobalMuonPath2 = cms.Path(
@@ -92,7 +134,10 @@ process.rpcSkimGlobalMuonPath2 = cms.Path(
   process.goodTrackerMuons +
   ~process.idTrackerMuons +
   process.goodGlobalMuons +
-  process.validHitsSelector  
+  process.validHitsSelector +
+  process.muontrackingNoRPC +
+  process.muonIdProducerSequenceNoRPC +
+  process.rawProd  
 )
 
 # Output module configuration
@@ -101,7 +146,19 @@ from Configuration.EventContent.EventContent_cff import *
 rpcSkimEventContent = cms.PSet(
     outputCommands = cms.untracked.vstring()
 )
+
+noRPCMuonsContent = cms.PSet(
+    outputCommands = cms.untracked.vstring(
+      'keep *_*NoRPC_*_*',
+      'keep L1MuRegionalCand*_*_*_*',
+      'keep *_simMuonRPCDigis_*_*',
+      'keep L1GlobalTriggerObjectMapRecord*_*_*_*',
+      'keep *_g4SimHits_*_*'
+      )
+    )
+
 rpcSkimEventContent.outputCommands.extend(RECOEventContent.outputCommands)
+rpcSkimEventContent.outputCommands.extend(noRPCMuonsContent.outputCommands)
 
 rpcSkimEventSelection = cms.PSet(
     SelectEvents = cms.untracked.PSet(
@@ -118,7 +175,7 @@ process.rpcSkimOutputModule = cms.OutputModule("PoolOutputModule",
         filterName = cms.untracked.string('RPCSkim'),
         dataTier = cms.untracked.string('USER')
    ),
-   fileName = cms.untracked.string('rpcSkim_MinBias.root')
+   fileName = cms.untracked.string('file:/tmp/fabozzi/rpcSkimNew_MinBias.root')
 )
 
 process.outpath = cms.EndPath(process.rpcSkimOutputModule)
