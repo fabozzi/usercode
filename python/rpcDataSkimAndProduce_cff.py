@@ -30,6 +30,10 @@ scrapingFilter = cms.EDFilter("FilterOutScraping",
                                       numtrack = cms.untracked.uint32(10),
                                       thresh = cms.untracked.double(0.25)
                                       )
+
+# filter on l1 mu paths and trigger given by dt or csc
+from MuonAnalysis.Fabozzi.rpcSkimComplDetTrigger_cff import *
+
 # Tracker muon filters
 goodTrackerMuons = cms.EDFilter("CandViewSelector",
   src = cms.InputTag("muons"),
@@ -80,7 +84,7 @@ muonIdProducerSequenceNoRPC = cms.Sequence(
 )
 
 ###############################################
-### paths
+### sequences with no trigger selection
 
 rpcSkimTrackerMuonPath = cms.Sequence(
   hltLevel1GTSeed +
@@ -110,6 +114,48 @@ rpcSkimGlobalMuonPath2 = cms.Sequence(
   hltMinBiasBSC +
   primaryVertexFilter +
   scrapingFilter +
+  goodTrackerMuons +
+  ~idTrackerMuons +
+  goodGlobalMuons +
+  validHitsSelector + 
+  muontrackingNoRPC +
+  muonIdProducerSequenceNoRPC
+)
+
+###############################################
+### sequences with trigger selection
+
+rpcSkimTrigAndTrackerMuonPath = cms.Sequence(
+  hltLevel1GTSeed +
+  hltMinBiasBSC +
+  primaryVertexFilter +
+  scrapingFilter +
+  complDetTrigger +
+  goodTrackerMuons +
+  idTrackerMuons +
+  muontrackingNoRPC +
+  muonIdProducerSequenceNoRPC
+)
+
+rpcSkimTrigAndGlobalMuonPath1 = cms.Sequence(
+  hltLevel1GTSeed +
+  hltMinBiasBSC +
+  primaryVertexFilter +
+  scrapingFilter +
+  complDetTrigger +
+  ~goodTrackerMuons +
+  goodGlobalMuons +
+  validHitsSelector +
+  muontrackingNoRPC +
+  muonIdProducerSequenceNoRPC
+)
+
+rpcSkimTrigAndGlobalMuonPath2 = cms.Sequence(
+  hltLevel1GTSeed +
+  hltMinBiasBSC +
+  primaryVertexFilter +
+  scrapingFilter +
+  complDetTrigger +
   goodTrackerMuons +
   ~idTrackerMuons +
   goodGlobalMuons +
