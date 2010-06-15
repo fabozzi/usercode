@@ -5,6 +5,8 @@
   <use   name="FWCore/ParameterSet"/>
   <use   name="DataFormats/Common"/>
   <use   name="DataFormats/TrackReco"/>
+  <use   name="DataFormats/L1GlobalMuonTrigger"/>
+  <use   name="DataFormats/L1GlobalTrigger"/>
   <use   name="DataFormats/MuonReco"/>
   <use   name="DataFormats/BeamSpot"/>
   <use   name="DataFormats/MuonDetId"/>

@@ -55,9 +55,12 @@ DetTriggerFilter::filter(edm::Event& event, const edm::EventSetup& setup){
     bxBools.push_back(trBx);
   }
 
-  bool aEv;
-  for(unsigned int bls=0;bls<bxBools.size()-1;bls++)
-    aEv=(bxBools[bls] || bxBools[bls+1]);
+  bool aEv(false);
+  if(bxLimit==0)aEv=aEv||bxBools[0];
+  else {
+    for(unsigned int bls=0;bls<bxBools.size()-1;bls++)
+      aEv=aEv || (bxBools[bls] || bxBools[bls+1]);
+  }
 
   return aEv;
 
