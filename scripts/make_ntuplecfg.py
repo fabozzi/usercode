@@ -52,9 +52,14 @@ for samples in samplebunches :
             for sample in samples :
  #               print sample
                 cfgfile.write(sample)
-        cfgfile.write(commandline)
+        elif commandline.endswith('h2l2b450_histo.root\') )\n') :
+            cfgfile.write(commandline.replace('h2l2b450_histo','h2l2b450_histo_'+str(i) ) )            
+        elif commandline.endswith('h2l2b_ntuple.root\')\n') :
+            cfgfile.write(commandline.replace('h2l2b_ntuple','h2l2b_ntuple_'+str(i) ) )                        
+        else:
+            cfgfile.write(commandline)
     cfgtemplate.close()
     cfgfile.close()
-    os.system("cmsRun higgs2l2bNtupleMC_42X_"+str(i)+".py >& log_"+str(i)".txt&");
+    os.system("cmsRun higgs2l2bNtupleMC_42X_"+str(i)+".py >& log_"+str(i)+".txt&");
     i += 1
 
