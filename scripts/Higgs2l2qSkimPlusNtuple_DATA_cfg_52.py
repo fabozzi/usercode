@@ -54,7 +54,7 @@ process.source.fileNames = [
 ### DEFINITION OF THE PFBRECO+PAT SEQUENCES ##########
 # load the PAT config
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
-process.out.fileName = cms.untracked.string('patTuple_myTest.root')
+#process.out.fileName = cms.untracked.string('patTuple_myTest.root')
 
 # Configure PAT to use PFBRECO instead of AOD sources
 # this function will modify the PAT sequences.
@@ -655,7 +655,8 @@ process.filterPath = cms.Path(
 )
 
 ### OUTPUT DEFINITION #############################################
-process.edmNtuplesOut = cms.OutputModule(
+#process.edmNtuplesOut = cms.OutputModule(
+process.out = cms.OutputModule(
     "PoolOutputModule",
     fileName = cms.untracked.string('h2l2q_ntuple_52.root'),
     outputCommands = cms.untracked.vstring(
@@ -677,7 +678,8 @@ process.edmNtuplesOut = cms.OutputModule(
         )
     )
 
-process.edmNtuplesOut.outputCommands.extend([
+#process.edmNtuplesOut.outputCommands.extend([
+process.out.outputCommands.extend([
     'keep *_ecalDeadCellTPfilter_*_*',
     'keep *_HBHENoiseFilterResultProducer*_*_*',
     'keep *_BeamHaloSummary_*_*',
@@ -688,7 +690,9 @@ process.edmNtuplesOut.outputCommands.extend([
     'keep *_scrapingFilter_*_*',
     'keep *_totalKinematicsFilterCMG_*_*'])
 
-process.edmNtuplesOut.outputCommands.extend(['keep edmMergeableCounter_*_*_*'])
+#process.edmNtuplesOut.outputCommands.extend(['keep edmMergeableCounter_*_*_*'])
+process.out.outputCommands.extend(['keep edmMergeableCounter_*_*_*'])
 
-process.endPath = cms.EndPath(process.edmNtuplesOut)
+#process.endPath = cms.EndPath(process.edmNtuplesOut)
+process.outPath = cms.EndPath(process.out)
 
