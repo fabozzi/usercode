@@ -689,7 +689,7 @@ process.out.outputCommands.extend([
     'keep *_scrapingFilter_*_*',
     'keep *_totalKinematicsFilterCMG_*_*'])
 
-process.edmNtuplesOut.outputCommands.extend(['keep edmMergeableCounter_*_*_*'])
+#process.edmNtuplesOut.outputCommands.extend(['keep edmMergeableCounter_*_*_*'])
 process.out.outputCommands.extend(['keep edmMergeableCounter_*_*_*'])
 
 #process.endPath = cms.EndPath(process.edmNtuplesOut)
