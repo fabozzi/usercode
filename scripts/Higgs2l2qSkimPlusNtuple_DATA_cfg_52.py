@@ -21,7 +21,7 @@ else:#Data
 
 ############ general options ####################
 process.options.wantSummary = True
-process.maxEvents.input = 50
+process.maxEvents.input = 500
 process.MessageLogger.cerr.FwkReport.reportEvery = 10
 ########### gloabl tag ############################
 from CMGTools.Common.Tools.getGlobalTag import getGlobalTag
@@ -48,6 +48,7 @@ print sep_line
 process.source.fileNames = [
 #    'file:/data3/scratch/cms/mc/Summer12/PU_S7_START52_V5-v2/DYJetsToLL_M-50/FE123555-F27A-E111-8E40-003048D46046.root'
 #    'file:ACAEB147-ED80-E111-A73F-0025901D6268.root'
+    'file:/data3/scratch/cms/data/Run2012A/DoubleMu/190782/723EF864-8584-E111-A833-003048CFB40C.root',
     'file:/data3/scratch/cms/data/Run2012A/DoubleMu/190704/A08772C8-4F83-E111-83B9-003048D2BA82.root'
 ]
 
@@ -55,6 +56,8 @@ process.source.fileNames = [
 # load the PAT config
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
 #process.out.fileName = cms.untracked.string('patTuple_myTest.root')
+
+from PhysicsTools.PatAlgos.tools.coreTools import *
 
 # Configure PAT to use PFBRECO instead of AOD sources
 # this function will modify the PAT sequences.
@@ -86,6 +89,8 @@ jetAlgoAK5="AK5"
 
 usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgoAK5, runOnMC=runOnMC, postfix=postfixAK5,
           jetCorrections=('AK5PFchs', jetCorrections))
+
+removeSpecificPATObjects(process, ['Taus'], postfix = "AK5")
 
 ############### remove useless modules ####################
 def removeUseless( modName ):

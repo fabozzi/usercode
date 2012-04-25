@@ -53,6 +53,8 @@ process.source.fileNames = [
 # load the PAT config
 process.load("PhysicsTools.PatAlgos.patSequences_cff")
 #process.out.fileName = cms.untracked.string('patTuple_myTest.root')
+from PhysicsTools.PatAlgos.tools.coreTools import *
+removeSpecificPATObjects(process, ['Taus'])
 
 # Configure PAT to use PFBRECO instead of AOD sources
 # this function will modify the PAT sequences.
