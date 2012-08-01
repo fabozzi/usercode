@@ -1,0 +1,27 @@
+<use     name="rootgraphics"/>
+<use     name="rootminuit"/>
+<use     name="rootminuit2"/>
+<use     name="Utilities/General"/>
+<use     name="FWCore/FWLite"/>
+<use     name="DataFormats/FWLite"/>
+<use     name="DataFormats/Math"/>
+<use     name="PhysicsTools/Utilities"/>
+<use     name="HiggsAnalysis/Higgs2l2b"/>
+<environment>
+  <bin   file="2l2bAll.cpp" name="2l2b"></bin>
+</environment>
+<environment>
+  <bin   file="2l2bAll_2012.cpp" name="2l2b_2012"></bin>
+</environment>
+<environment>
+  <bin   file="2l2bAll_2012_44.cpp" name="2l2b_2012_44"></bin>
+</environment>
+<environment>
+  <bin   file="2l2bAll_2011.cpp" name="2l2b_2011"></bin>
+</environment>
+<environment>
+  <bin   file="2l2bBump.cpp" name="2l2bBump"></bin>
+</environment>
+<environment>
+  <bin   file="ZZanalysis.cpp" name="zz"></bin>
+</environment>
