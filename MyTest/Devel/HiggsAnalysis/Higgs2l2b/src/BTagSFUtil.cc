@@ -38,7 +38,7 @@ void BTagSFUtil::SF(const std::string& btagAlgo, const std::string& wp, float pt
   }
 
   if(wp == "L"){ 
-    if(btagAlgo == "CSV")   SFb_ = 1.02658*((1.+(0.0195388*pt_sfb))/(1.+(0.0209145*pt_sfb)));
+    if(btagAlgo == "CSV") SFb_ = 1.02658*((1.+(0.0195388*pt_sfb))/(1.+(0.0209145*pt_sfb)));
     if(btagAlgo == "TCHE") SFb_ = 0.603913*((1.+(0.286361*pt_sfb))/(1.+(0.170474*pt_sfb)));
     if(btagAlgo == "JP") SFb_ = 0.969851*((1.+(-6.06362e-05*pt_sfb))/(1.+(-0.000156638*pt_sfb)));
     for(int i=0;i<NL;++i){
@@ -66,6 +66,8 @@ void BTagSFUtil::SF(const std::string& btagAlgo, const std::string& wp, float pt
  //  std::cout<<"ETAMIN AND ETAMAX ARE: "<<etamin<<" ,"<<etamax<<std::endl;
   TF1* SFlight_func = sfl_func.GetSFlmean(TString(btagAlgo),TString(wp),etamin, etamax);
   SFlight_ = SFlight_func->Eval(pt);
+  if(btagAlgo == "JP" && wp == "L") SFlight_ = SFlight_ * (1.01744 + (0.000813491*eta) - (6.01592e-07*eta*eta));
+  if(btagAlgo == "JP" && wp == "M") SFlight_ = SFlight_ * (0.964487 + (0.00134038*eta) -(1.43995e-06*eta*eta));
   TF1* Mistag_func = mt_func.GetMistagmean(TString(btagAlgo),TString(wp),etamin, etamax);
   Mistag_ =  Mistag_func->Eval(pt);
 }
