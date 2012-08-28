@@ -4,6 +4,7 @@
 #include "TTree.h"
 #include "TBranch.h"
 #include "TH1.h"
+#include "TMath.h"
 #include "TSystem.h"
 #include <vector>
 #include <iostream>
@@ -64,6 +65,15 @@ typedef vector<string> vstring;
   TBranch * b_##name = events->GetBranch(alias_##name.c_str());		\
   if (b_##name == 0) { cerr << "missing branch: " << alias_##name << endl; } \
   b_##name->SetAddress(& name) 
+
+#define BRANCHDOUBLE(name) \
+  edm::Wrapper<double> * name = new edm::Wrapper<double>(); \
+  string alias_##name = events->GetAlias(#name); \
+  alias_##name.erase(alias_##name.size() - 3);  \
+  TBranch * b_##name = events->GetBranch(alias_##name.c_str());         \
+  if (b_##name == 0) { cerr << "missing branch: " << alias_##name << endl; } \
+  b_##name->SetAddress(& name)
+
 
 #define BRANCHBOOL(name) \
   edm::Wrapper<bool> * name = new edm::Wrapper<bool>(); \
@@ -346,7 +356,9 @@ int main(int argc, char **argv) {
   for(int kkk = 0; kkk<3 ; kkk++)
     CandBTag[kkk] = 0;
   // BTag SF utility
+
   BTagSFUtil* btsfutil = new BTagSFUtil(13);
+  
   //TCHE SF
   // TFile* file_loose = TFile::Open("BTagPayloads_TCHEL.root");
   //  TFile* file_medium = TFile::Open("BTagPayloads_TCHEM.root");
@@ -963,6 +975,9 @@ int main(int argc, char **argv) {
 
 	bool unclean = ( (DRlep1_Jet1 < 0.5)  || (DRlep2_Jet1 < 0.5) || (DRlep1_Jet2 < 0.5) ||  (DRlep2_Jet2 < 0.5));
 
+
+	//BTagSFUtil* btsfutil = new BTagSFUtil(TMath::Sin(Jet1phi_*1000000));
+	//BTagSFUtil* btsfutil2 = new BTagSFUtil(TMath::Sin(Jet2phi_*1000000));
 	//if(!data) IDweight = IDweight_1 * IDweight_2;
 	evtWeight = PUWeight*IDweight;
 
@@ -1000,6 +1015,10 @@ int main(int argc, char **argv) {
 	  float QGLikeJet1 = qglikeli->computeQGLikelihoodPU( Jet1pt_, getInt(rhoRestrictedEta), jet1Nch_, jet1Nneu_, jet1ptD_ );
 	  float QGLikeJet2 = qglikeli->computeQGLikelihoodPU( Jet2pt_, getInt(rhoRestrictedEta), jet2Nch_, jet2Nneu_, jet2ptD_ );
 	  qgLD_ = QGLikeJet1 * QGLikeJet1;
+
+
+	  float ResidZZMass_ = (fabs(zllmass_-91.187) + fabs(zjjmass_-91.187));  
+
 
 	  //SIGNAL SELECTION
 	  if( zllcut) {
@@ -1098,7 +1117,11 @@ int main(int argc, char **argv) {
 // 	      jet2_tagged_medium = jet2csv_ > 0.679;
 // 	      jet2_tagged_loose  = jet2csv_ > 0.244;
 
+
 	      // eventually apply SF for MC
+
+
+
 	      if( btagScale ) {
 		btsfutil->modifyBTagsWithSF( "JP", jet1_tagged_loose, jet1_tagged_medium, Jet1pt_, Jet1eta_, jet1flav_ );
 		btsfutil->modifyBTagsWithSF( "JP", jet2_tagged_loose, jet2_tagged_medium, Jet2pt_, Jet2eta_, jet2flav_ );
@@ -1126,6 +1149,9 @@ int main(int argc, char **argv) {
 	      //std::cout<<"sf applied: "<<std::endl;
 
 	      // select only 2-tag candidates
+
+	   
+
 	      if(twoTagCategory){
 		pass[4] = true;
 		++cand[4];
@@ -1147,10 +1173,10 @@ int main(int argc, char **argv) {
 		  
 		  // check if it is the best candidate
 		  //		if ( ((Jet1pt_rf+ Jet2pt_rf)>SumPtBest_) && (higgsrefitMass>0) ){
-		  if ( (fabs(zllmass_-91.187) < ResidZllMassBest_) && (higgsrefitMass>0) ){
+		  if (  (ResidZZMass_ < ResidZllMassBest_) && (higgsrefitMass>0) ){
 		    // if best candidate store its variables
 		    //		  SumPtBest_= Jet1pt_rf+ Jet2pt_rf;
-		    ResidZllMassBest_= fabs(zllmass_-91.187);
+		    ResidZllMassBest_=  ResidZZMass_;
 		    cos1_Best=cos1_;
 		    cos2_Best=cos2_;
 		    cosStar_Best= cosStar_;
@@ -1175,14 +1201,14 @@ int main(int argc, char **argv) {
 		    // dump event variables
 		    // check if it is the best candidate at this level
 		    //		  if ( ( (Jet1pt_rf+ Jet2pt_rf)>SumPtBest_Final) && (higgsrefitMass>0) ){
-		    if ( (fabs(zllmass_-91.187) < ResidZllMassBest_Final) && (higgsrefitMass>0) ){
+		    if ( ( ResidZZMass_ < ResidZllMassBest_Final) && (higgsrefitMass>0) ){
 		      // if best candidate store lljj mass
 		      //		    SumPtBest_Final= Jet1pt_rf+ Jet2pt_rf;
 		      exist2tag = true;
 		      puw2tag = evtWeight;
 		      ch2tag = ch;
 		      //cout<<"lept channel "<<ch2tag<<endl;
-		      ResidZllMassBest_Final= fabs(zllmass_-91.187);
+		      ResidZllMassBest_Final=  ResidZZMass_;
 		      lljjmass_= higgsrefitMass;
 		      lljjmass_noRefit_= higgsMass;
 		      EvtNum2Tag_=higgsEvtNum;
@@ -1212,13 +1238,13 @@ int main(int argc, char **argv) {
 		if( hLD_rf >(0.302+(0.000656*higgsrefitMass)) ){
 		  // check if it is the best candidate at this level
 		  // ( ( (Jet1pt_rf+ Jet2pt_rf)>SumPtBest_Final_1btag) && (higgsrefitMass>0) ){
-		  if ( (fabs(zllmass_-91.187) < ResidZllMassBest1tag_) && (higgsrefitMass>0) ){
+		  if ( ( ResidZZMass_ < ResidZllMassBest1tag_) && (higgsrefitMass>0) ){
 		    // if best candidate store lljj mass
 		    exist1tag = true;
 		    puw1tag = evtWeight;
 		      
 		    ch1tag = ch;
-		    ResidZllMassBest1tag_ = fabs(zllmass_-91.187);
+		    ResidZllMassBest1tag_ =  ResidZZMass_;
 		    lljjmass_1btag_ = higgsrefitMass;
 		    lljjmass_noRefit_1btag_ = higgsMass;
 		    EvtNum1Tag_=higgsEvtNum;
@@ -1246,17 +1272,18 @@ int main(int argc, char **argv) {
 		//		float QGLikeJet2 = qglikeli->computeQGLikelihoodPU( Jet2pt_, getInt(rhoRestrictedEta), jet2Nch_, jet2Nneu_, jet2ptD_ );
 
 		
-		if( QGLikeJet1 * QGLikeJet2 > 0.10) {
+		//		if( QGLikeJet1 * QGLikeJet2 > 0.10) {
+		if(1) {
 		  // LD cut
 		  
 	
 		  if( hLD_rf >(0.55+(0.00025*higgsrefitMass)) ){
 		    // check if it is the best candidate at this level
-		    if ( (fabs(zllmass_-91.187) < ResidZllMassBest0tag_) && (higgsrefitMass>0) ){
+		    if ( ( ResidZZMass_< ResidZllMassBest0tag_) && (higgsrefitMass>0) ){
 		      exist0tag = true;
 		      puw0tag = evtWeight;
 		      ch0tag = ch;
-		      ResidZllMassBest0tag_ = fabs(zllmass_-91.187);
+		      ResidZllMassBest0tag_ =  ResidZZMass_;
 		      lljjmass_0btag_ = higgsrefitMass;
 		      lljjmass_noRefit_0btag_ = higgsMass;
 		      EvtNum0Tag_=higgsEvtNum;
@@ -1338,13 +1365,13 @@ int main(int argc, char **argv) {
 		}		
 		if( hLD_rf > 0.5 ){
 		  // best candidate in the sideband after hLD
-		  if ( (fabs(zllmass_-91.187) < ResidZllMassBestSB2tag_) && (higgsrefitMass>0) ){
+		  if ( ( ResidZZMass_ < ResidZllMassBestSB2tag_) && (higgsrefitMass>0) ){
 		    //		  if ( ( (Jet1pt_rf+ Jet2pt_rf)>SumPtBest_FinalSB) && (higgsrefitMass>0) ){
 		    // SumPtBest_FinalSB= Jet1pt_rf+ Jet2pt_rf;
 		    exist2tagSB = true;
 		    puw2tagSB = evtWeight;
 		    ch2tagSB = ch;
-		    ResidZllMassBestSB2tag_ = (fabs(zllmass_-91.187)); 
+		    ResidZllMassBestSB2tag_ =  ResidZZMass_; 
 		    lljjmassFinal_SB = higgsrefitMass;
 		    lljjmassFinal_noRefit_SB = higgsMass;
 		    zjjmass_SB2btag_ = zjjmass_;
@@ -1363,12 +1390,12 @@ int main(int argc, char **argv) {
 		if( hLD_rf >(0.302+(0.000656*higgsrefitMass)) ){
 		  // check if it is the best candidate at this level
 		  // ( ( (Jet1pt_rf+ Jet2pt_rf)>SumPtBest_Final_1btag) && (higgsrefitMass>0) ){
-		  if ( (fabs(zllmass_-91.187) < ResidZllMassBestSB1tag_) && (higgsrefitMass>0) ){
+		  if ( ( ResidZZMass_< ResidZllMassBestSB1tag_) && (higgsrefitMass>0) ){
 		    // if best candidate store lljj mass
 		    exist1tagSB = true;
 		    puw1tagSB = evtWeight;
 		    ch1tagSB = ch;
-		    ResidZllMassBestSB1tag_ = fabs(zllmass_-91.187);
+		    ResidZllMassBestSB1tag_ =  ResidZZMass_;
 		    lljjmassFinal_SB_1btag_= higgsrefitMass;
 		    zjjmass_SB1btag_ = zjjmass_;
 		    EvtNum1TagSB_=higgsEvtNum;
@@ -1386,11 +1413,11 @@ int main(int argc, char **argv) {
 	 
 		  if( hLD_rf >(0.55+(0.00025*higgsrefitMass)) ){
 		    // check if it is the best candidate at this level
-		    if ( (fabs(zllmass_-91.187) < ResidZllMassBestSB0tag_) && (higgsrefitMass>0) ){
+		    if ( ( ResidZZMass_ < ResidZllMassBestSB0tag_) && (higgsrefitMass>0) ){
 		      exist0tagSB = true;
 		      puw0tagSB = evtWeight;
 		      ch0tagSB = ch;
-		      ResidZllMassBestSB0tag_ = fabs(zllmass_-91.187);
+		      ResidZllMassBestSB0tag_ =  ResidZZMass_;
 		      lljjmassFinal_SB_0btag_ = higgsrefitMass;
 		      zjjmass_SB0btag_ = zjjmass_;
 		      EvtNum0TagSB_=higgsEvtNum;

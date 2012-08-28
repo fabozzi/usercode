@@ -7,7 +7,7 @@
   BRANCHFLOAT(rhoRestrictedEta);
 //if(debug)std::cout<<"rho"<<std::endl;
 
-  BRANCHFLOAT(rho);
+  BRANCHDOUBLE(rho);
 //if(debug) std::cout<<"debug 0"<<std::endl;
   // MUON BRANCHES
   BRANCHBOOL(passSingleMuTrig);
