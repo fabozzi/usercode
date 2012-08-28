@@ -7,11 +7,17 @@ import string
 ### indirnames is the list of directories to which copying files
 
 
-inputpath = '/data3/scratch/users/fabozzi/Higgs/Summer12/'
-ntpdir = '/edmntp26Jun12/'
 
-outputpath = '/data3/scratch/users/decosa/Higgs/Summer12/'
-ntpdirout = '/edmntp11Jul12Cleaned/'
+inputpath = '/afs/cern.ch/work/d/decosa/private/Higgs/Summer12/'
+#outpath = '/data3/scratch/users/decosa/Higgs/TestSummer12/'
+ntpdir = '/edmntp22Jul12Cleaned/'
+
+
+#inputpath = '/data3/scratch/users/fabozzi/Higgs/Summer12/'
+#ntpdir = '/edmntp26Jun12/'
+
+outputpath =  '/tmp/decosa/Higgs/Summer12/'
+ntpdirout = '/edmntp27Jul12Cleaned/'
 
 #ntpdir = '/edmntpTest/'
 #ntpdirout = '/edmntpCleanedTest/'
@@ -21,13 +27,12 @@ ntpdirout = '/edmntp11Jul12Cleaned/'
 #dirnames =  [ 'TT', 'WZ', 'ZZ']
 #dirnames =  [ 'TEST']
 #dirnames =  ['ElRun2012A', 'ElRun2012B']
-dirnames = [ 'MuRun2012A','MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext' ]
 #dirnames = ['ElRun2012A','ElRun2012A_23May2012', 'ElRun2012B', 'ElRun2012B_Ext', 'MuRun2012A','MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext' ]
 #dirnames = ['GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
 #dirnames =  ['MuRun2012A']
 #dirnames =  ['DYJetsToLL_M-50', 'TT', 'WZ', 'ZZ']
 
-#####dirnames =  ['DYJetsToLL_M-50']
+dirnames =  ['DYJetsToLL_M-50']
 
 #dirnames =  ['GluGluToHToZZTo2L2Q_M-300', 'GluGluToHToZZTo2L2Q_M-200']
 
@@ -53,11 +58,11 @@ for a in dirnames:
             #cmd =  "lcg-cp -D srmv2 srm://srm.ciemat.es:8443/pnfs/ciemat.es/data/cms" +inputpaths[dirnames.index(a)] + c + " " +outpath + a + ntpdir + c
             #print cmd
             #os.system(cmd)
-            splitc = c.split("_")
-            ntuple = "_".join(splitc[:3])
-            check = [h.startswith(ntuple) for h in files]
-            if (True not in check):
-                files.append(c)
+            #splitc = c.split("_")
+            #ntuple = "_".join(splitc[:3])
+            #check = [h.startswith(ntuple) for h in files]
+            #if (True not in check):
+            files.append(c)
                     
 
     cfgfilename = "higgs2l2qNtupleFilter.py"    
