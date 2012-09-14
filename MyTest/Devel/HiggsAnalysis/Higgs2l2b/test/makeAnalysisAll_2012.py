@@ -18,17 +18,17 @@ channels = ['Mu', 'El']
 
 runPeriod = "2012All"
 
-#ntupleFolder = "edmntp12Jul12Cleaned"
-ntupleFolder = "edmntpTestCleaned"
+ntupleFolder = "edmntp12Jul12Cleaned"
+#ntupleFolder = "edmntpTestCleaned"
 #ntupleFolder2 = "edmntp26Jun12"
 #ntupleFolder2 = "edmntpTest"
 #dirname = ['GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-200_8TeV','GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV','GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
 
-dirname = [  'GluGluToHToZZTo2L2Q_M-300_8TeV']
+#dirname = [  'GluGluToHToZZTo2L2Q_M-300_8TeV']
 #dirname = [ 'DYJetsToLL_M-50']
 #dirname = [  'MuRun2012A', 'MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext', 'ElRun2012B', 'ElRun2012B_Ext','ElRun2012A', 'ElRun2012A_23May2012']
 #dirname = ['MuRun2012B_Ext']
-
+dirname = ['TT', 'ZZ', 'WZ']
 #dirname = [ 'ElRun2012B', 'ElRun2012B_Ext','ElRun2012A', 'ElRun2012A_23May2012']
 
 #dirname = ['ElRun2012A']
@@ -62,8 +62,8 @@ for channel in channels:
    
    
    for a in dirname:
-      data = "DATA"
-      sf = "noSF"
+      data = "MC"
+      sf = "SF"
       wt = "tree"
       txt = "txt"
       path = "/data3/scratch/users/decosa/Higgs/Summer12/"+a+"/"+ ntupleFolder+ "/"
