@@ -16,7 +16,7 @@ normalizeToData = False
 
 
 
-folder = "13July_5fb"+ch+"Channel/"
+folder = "29Aug_5fb"+ch+"Channel/"
 
 
 samples = [ "ZZ", "TT", "DYJetsToLL_M-50"]
@@ -95,6 +95,8 @@ Vars["metSignif"] = (2,0.,0.,True, 'MET Significance')
 if (ch == 'Mu'):Vars["npv"] = (1,0.,0.,False,'# of primary vertexes - #mu channel')
 if (ch == 'El'):Vars["npv"] = (1,0.,0.,False,'# of primary vertexes - e channel')
 Vars["npv1"] = (1,0.,0.,True, '# of primary vertexes')
+Vars["npv1"] = (1,0.,0.,False, '# of primary vertexes')
+
 if (ch == 'Mu'):Vars["npv_woReweight"] = (1,0.,0.,False, '# of primary vertexes (without reweighting) - #mu channel')
 if (ch == 'El'):Vars["npv_woReweight"] = (1,0.,0.,False, '# of primary vertexes (without reweighting) - e channel')
 

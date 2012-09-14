@@ -378,7 +378,7 @@ int main(int argc, char **argv) {
     //  --> Run2012A <--
     if( PUPeriod == "2012All"){
       cout << "PU reweighting ------> USING PU MODEL FOR Run2012" << endl;
-      LumiWeights_ = edm::LumiReWeighting("PUDist_Summer12MC_Extended.root", "PUDist_Run2012AB_Truth_JSON_22June.root", "PUS7_Distr", "pileup");
+      LumiWeights_ = edm::LumiReWeighting("PUDist_Summer12MC_Extended.root", "PUDist_Run2012AB_Truth_JSON_29Aug.root", "PUS7_Distr", "pileup");
     }
     //  --> Run2011A <--
     else if(PUPeriod == "2011A"){
@@ -904,9 +904,9 @@ int main(int argc, char **argv) {
 	  //std::cout<<"id boolean: "<<isoIDLepCut<<std::endl;
 
 	  IDweight_1 = ElTable.Val(lept1pt_, lept1eta_);
-	  std::cout<<"El eff1: "<<IDweight_1<<std::endl;
+	  //std::cout<<"El eff1: "<<IDweight_1<<std::endl;
 	  IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
-	  std::cout<<"El eff2: "<<IDweight_2<<std::endl;
+	  //std::cout<<"El eff2: "<<IDweight_2<<std::endl;
 
 
 
@@ -1408,7 +1408,8 @@ int main(int argc, char **argv) {
 	    if(zeroTagCategory){
 		// apply selection for 0-tag candidates
 		
-		if( QGLikeJet1 * QGLikeJet2 > 0.10) {
+	      if(1){	
+		//if( QGLikeJet1 * QGLikeJet2 > 0.10) {
 		  // LD cut
 	 
 		  if( hLD_rf >(0.55+(0.00025*higgsrefitMass)) ){
