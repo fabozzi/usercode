@@ -24,6 +24,7 @@
 #include "../interface/LeptonID.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "HiggsAnalysis/Higgs2l2b/interface/table.h"
+#include "HiggsAnalysis/Higgs2l2b/interface/Weights.h"
 
 
 using namespace std;
@@ -607,6 +608,7 @@ int main(int argc, char **argv) {
       table ElTable("sFGsfIdLoose.txt"); 
       //table MuTable("PfToId.txt"); 
 
+      Weights elEff("Weights.root", "ElIDEff");
       // LOOP on CANDIDATES IN THE EVENT
       for(unsigned int j = 0; j < cands; ++j) {
 	++cand[1];
@@ -903,9 +905,12 @@ int main(int argc, char **argv) {
 
 	  //std::cout<<"id boolean: "<<isoIDLepCut<<std::endl;
 
-	  IDweight_1 = ElTable.Val(lept1pt_, lept1eta_);
+	  //IDweight_1 = ElTable.Val(lept1pt_, lept1eta_);
+	  IDweight_1 = elEff.getEff( lept1eta_, lept1pt_);
 	  //std::cout<<"El eff1: "<<IDweight_1<<std::endl;
-	  IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
+	  //IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
+	  IDweight_2 = elEff.getEff( lept2eta_, lept2pt_);
+
 	  //std::cout<<"El eff2: "<<IDweight_2<<std::endl;
 
 
@@ -978,7 +983,7 @@ int main(int argc, char **argv) {
 
 	//BTagSFUtil* btsfutil = new BTagSFUtil(TMath::Sin(Jet1phi_*1000000));
 	//BTagSFUtil* btsfutil2 = new BTagSFUtil(TMath::Sin(Jet2phi_*1000000));
-	//if(!data) IDweight = IDweight_1 * IDweight_2;
+	if(!data) IDweight = IDweight_1 * IDweight_2;
 	evtWeight = PUWeight*IDweight;
 
 

@@ -1,15 +1,18 @@
 import sys
 sys.argv.append('-b')
-
 import ROOT
-
 import array
 
 ROOT.gROOT.Reset();
 ROOT.gROOT.SetStyle('Plain')
-
 ROOT.gROOT.SetBatch()  # don't pop up canvases
 
+
+### INSTRUCTIONS
+### Use this scripts to create root files containing histograms with weghts
+### depending on eta and pt. To use it, please, check the Eta and Pt ranges definition.
+### Set the name of the histo.
+### Set the values in effArray, it is an array of arrays.
 name = "ElIDEff"
 title = name
 
