@@ -5,6 +5,8 @@
 
 using namespace std;
 
+LineshapeWeight::LineshapeWeight(){ }
+
 LineshapeWeight::LineshapeWeight( string inputFile ) :
   weightFileName_(inputFile)
 {

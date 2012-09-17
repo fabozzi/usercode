@@ -9,6 +9,7 @@ class LineshapeWeight{
 
  public:
 
+  LineshapeWeight();
   LineshapeWeight( std::string inputFile );
   ~LineshapeWeight();
 
