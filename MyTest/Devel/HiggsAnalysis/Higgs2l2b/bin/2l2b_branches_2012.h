@@ -10,8 +10,8 @@
   BRANCHDOUBLE(rho);
 //if(debug) std::cout<<"debug 0"<<std::endl;
   // MUON BRANCHES
-  BRANCHBOOL(passSingleMuTrig);
-  BRANCHBOOL(passDoubleMuTrig);
+//  BRANCHBOOL(passSingleMuTrig);
+//  BRANCHBOOL(passDoubleMuTrig);
   BRANCH(CleanJetPt);
 //if(debug)std::cout<<"debug 0"<<std::endl;
   BRANCH(muHiggsLeptDau1Pt);
@@ -131,8 +131,8 @@ BRANCH(muHiggsJetDau2puBeta);
 
 
   // ELECTRON BRANCHES
- BRANCHBOOL(passSingleElTrig);
-  BRANCHBOOL(passDoubleElTrig);
+//  BRANCHBOOL(passSingleElTrig);
+//  BRANCHBOOL(passDoubleElTrig);
   BRANCH(elHiggsLeptDau1Pt);
   BRANCH(elHiggsLeptDau2Pt);
   BRANCH(elHiggsJetDau1Pt);
