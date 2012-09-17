@@ -65,7 +65,7 @@ void LineshapeWeight::getWeight(float m, double & weight,
     weightm = weightM_[lowindex] +( m - bincenters_[lowindex] )*(weightM_[lowindex+1]-weightM_[lowindex])/(bincenters_[lowindex+1]-bincenters_[lowindex])  ;
   }
   
-  cout << m << " " << bincenters_[lowindex] << "  " << bincenters_[lowindex+1] << " " <<  weight << endl;
+  //  cout << m << " " << bincenters_[lowindex] << "  " << bincenters_[lowindex+1] << " " <<  weight << endl;
   
   return;
 

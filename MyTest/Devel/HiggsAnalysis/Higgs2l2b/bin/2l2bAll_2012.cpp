@@ -146,6 +146,7 @@ int main(int argc, char **argv) {
   //  string fixMuRunB(argv[9]);
   string scaleFactor(argv[9]);
   string applyLR_(argv[10]);
+  string hmasshyp(argv[11]);
   string outFileName(outFile);
 
   bool data = false;
@@ -155,7 +156,7 @@ int main(int argc, char **argv) {
   ss<<scaleFactor;
   float scaleFact;
   ss>>scaleFact;
-  cout<< "scaleFactor "<<scaleFact;
+  cout<< "scaleFactor "<<scaleFact << endl;
 
   cout<<"filePath: "<<path<<endl;
   if (isData=="DATA") {
@@ -243,6 +244,11 @@ int main(int argc, char **argv) {
 
 
   // define histograms
+  // control histograms for lineshape reweighting
+  TH1F genhmass("genh_mass", "genh_mass", 500, 200, 1200);
+  TH1F genhmass_rew("genh_mass_rew", "genh_mass_rew", 500, 200, 1200);
+  TH1F LR_weights("LR_wei", "LR_wei", 100, 0, 5);
+  TH2F LR_weights_mass("wei_mass", "wei_mass", 250, 200, 1200, 50, 0, 5);
   // histo for event variables
   TH1F npv_woReweight("npv_woReweight", "npvwoReweight", 31, -0.5, 30.5);
   TH1F npv("npv", "npv", 31, -0.5, 30.5);
@@ -416,12 +422,8 @@ int main(int argc, char **argv) {
   
   }
 
-
   // Lineshape reweighting util
   LineshapeWeight * LRUtil;
-  if(applyLR){
-    LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs400_8TeV_W.txt_I.txt");
-  }
   
   //QGLike discriminator
   string QGFilePDF = "QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root";
@@ -431,16 +433,11 @@ int main(int argc, char **argv) {
 
   vdouble runNumber, evtNumber,lumiBlock;
   vint runNumSkim;
-  double LRweight(1.0);
-  double LRweightErrp(0.0);
-  double LRweightErrm(0.0);
 
   for(unsigned int i = 0; i <nEvents; ++i) {
    
     //    if(i%100 == 0) progress(double(i)/double(nEvents));
     ++count[0];
-    // variables for HLT selection
-    bool passTrigPath(true);
     // NUMBER OF CANDIDATES IN THE EVENT
     unsigned int cands(0);
 
@@ -451,30 +448,32 @@ int main(int argc, char **argv) {
     GETENTRY(rhoRestrictedEta,i);
     GETENTRY(rho,i);
 
-    // ------ TO DECIDE WHAT TO DO WITH TRIGGER BITS -------
-    //    GETENTRY(passSingleMuTrig,i);
-    //    GETENTRY(passDoubleMuTrig,i);
-    //    GETENTRY(passSingleElTrig,i);
-    //    GETENTRY(passDoubleElTrig,i);
-    // -----------------------------------------------------
-
-
-    // assign event weight for PU reweighting
+    // assign event weights 
     double evtWeight = 1.0;
     double PUWeight = 1.0;
     double IDweight_1 = 1.0;
     double IDweight_2 = 1.0;
     double IDweight = 1.0;
+    double LRweight(1.0);
+    double LRweightErrp(0.0);
+    double LRweightErrm(0.0);
     
     // assign event weight for Lineshape Reweighting
     if(applyLR){
+      LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_W.txt_I.txt");
       BRANCHFLOAT(genHiggsMass);    
       GETENTRY(genHiggsMass,i);    
+    // generated higgs mass before Lineshape Reweighting
+      genhmass.Fill(getInt(genHiggsMass));
       LRUtil->getWeight( getInt(genHiggsMass), LRweight, LRweightErrp, LRweightErrm);
-      cout << "Hmass = " << getInt(genHiggsMass) << " LRweight = " << LRweight << endl;
+      //      cout << "Hmass = " << getInt(genHiggsMass) << " LRweight = " << LRweight << endl;
+      // generated higgs mass after Lineshape Reweighting
+      genhmass_rew.Fill(getInt(genHiggsMass), LRweight);
+      LR_weights.Fill(LRweight);
+      LR_weights_mass.Fill(getInt(genHiggsMass), LRweight);
     }
 
- 
+    // get PU weight
     if(!data){
       //      BRANCHFLOAT(nGenInt);
       //      GETENTRY(nGenInt,i);
@@ -488,8 +487,6 @@ int main(int argc, char **argv) {
       GETENTRY(nGenIntBXp1,i);
       GETENTRY(trueNInt,i);
       //GETENTRY(rhoRestrictedEta, i);
-
-    
       //      cout<<"numInt: "<< getInt(trueNInt) <<endl;
       if(PUPeriod == "2012All") {
 	PUWeight = LumiWeights_.weight(getInt(trueNInt));
@@ -498,35 +495,8 @@ int main(int argc, char **argv) {
       else PUWeight = Lumi3DWeights_.weight3D( getInt(nGenIntBXm1), getInt(nGenIntBX0), getInt(nGenIntBXp1) );
     }      
 
-
-    
-    if(muChannel) {
-     
-      // ------ TO DECIDE WHAT TO DO WITH TRIGGER BITS -------
-      // if(data)
-      // 	passTrigPath = getInt(passDoubleMuTrig);
-      // -----------------------------------------------------
-      GETENTRY(muHiggsLeptDau1Pt,i);
-      cands = muHiggsLeptDau1Pt->product()->size();
-    } else {
-      // ------ TO DECIDE WHAT TO DO WITH TRIGGER BITS -------
-      // if(data)
-      // 	passTrigPath = !(getInt(passDoubleMuTrig)) && getInt(passDoubleElTrig);
-      // -----------------------------------------------------
-      GETENTRY(elHiggsLeptDau1Pt,i);
-      cands = elHiggsLeptDau1Pt->product()->size();
-    }
-
     evtWeight = PUWeight;
-    if(applyLR){
-      evtWeight *= LRweight;
-    }
 
-    // HLT selection: exclusive double trig selection
-    //if((PUPeriod == "2012A") || (PUPeriod == "2012B") )
-      // if(!passTrigPath)
-      // 	continue;
-    
     // fill histo of numPV (reweighted and not)
     npv.Fill(getInt(numPV),evtWeight);
     npv_woReweight.Fill(getInt(numPV));
@@ -537,6 +507,20 @@ int main(int argc, char **argv) {
     bool hasAlreadyCand = false;
     bool hasAlreadyCand_afterzjj = false;
     bool hasAlreadyCand_preZllcut = false;
+
+    // including also LR to the event weight
+    if(applyLR){
+      evtWeight *= LRweight;
+    }
+
+    // get number of candidates in the event
+    if(muChannel) {
+      GETENTRY(muHiggsLeptDau1Pt,i);
+      cands = muHiggsLeptDau1Pt->product()->size();
+    } else {
+      GETENTRY(elHiggsLeptDau1Pt,i);
+      cands = elHiggsLeptDau1Pt->product()->size();
+    }
 
     if(cands > 0) {
       pass[1] = true;
@@ -1013,7 +997,8 @@ int main(int argc, char **argv) {
 	//BTagSFUtil* btsfutil = new BTagSFUtil(TMath::Sin(Jet1phi_*1000000));
 	//BTagSFUtil* btsfutil2 = new BTagSFUtil(TMath::Sin(Jet2phi_*1000000));
 	if(!data) IDweight = IDweight_1 * IDweight_2;
-	evtWeight = PUWeight*IDweight;
+	//	evtWeight = PUWeight*IDweight;
+	evtWeight *= IDweight;
 
 
 	if(kineLepCut && fiducialCut && dbLepCut && isoIDLepCut && kineJetCut &&  zchargecut && !unclean) {
@@ -1840,7 +1825,11 @@ int main(int argc, char **argv) {
   npv1.Write();
   npv2.Write();
   npvfin.Write();
-
+  genhmass.Write();
+  genhmass_rew.Write();
+  LR_weights.Write();
+  LR_weights_mass.Write();
+   
   hmass_sb_all.Write();
   hmassnorefit_sb_all.Write();
   hmass_sb_2b.Write();

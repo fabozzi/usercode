@@ -19,6 +19,15 @@ channels = ['Mu', 'El']
 runPeriod = "2012All"
 
 ntupleFolder = "edmntp12Jul12Cleaned"
+
+signalMap = {
+   'GluGluToHToZZTo2L2Q_M-200_8TeV': 200,
+   'GluGluToHToZZTo2L2Q_M-300_8TeV': 300,
+   'GluGluToHToZZTo2L2Q_M-400_8TeV': 400,
+   'GluGluToHToZZTo2L2Q_M-500_8TeV': 500,
+   'GluGluToHToZZTo2L2Q_M-600_8TeV': 600,
+   }
+
 #ntupleFolder = "edmntpTestCleaned"
 #ntupleFolder2 = "edmntp26Jun12"
 #ntupleFolder2 = "edmntpTest"
@@ -69,6 +78,14 @@ for channel in channels:
       path = "/data3/scratch/users/decosa/Higgs/Summer12/"+a+"/"+ ntupleFolder+ "/"
 #      applyfix = "NOfixMu"
       scaleFact = 1
+      applyLR = "noLR"
+      mH = 600
+
+      if( a.startswith("GluGlu") ):
+         mH = signalMap[ a ]
+         if( mH >= 400 ):
+            applyLR = "LR"
+      
       if( (not a.startswith("ElRun")) and (not  a.startswith("MuRun"))): scaleFact = scale[a]
       
       if( (channel == "Mu") and (a.startswith("ElRun")) ) :
@@ -101,7 +118,7 @@ for channel in channels:
       for d in list:
          if d.endswith('.root'):
             
-            cmd="2l2b_2012 "+path+d+" "+"NoNorm_" + channel + "/"+ a + str(list.index(d))+".root" +sep+data+sep+sf+sep+channel+sep+wt+sep+txt+sep+pu_per+sep+str(scaleFact)
+            cmd="2l2b_2012 "+path+d+" "+"NoNorm_" + channel + "/"+ a + str(list.index(d))+".root" +sep+data+sep+sf+sep+channel+sep+wt+sep+txt+sep+pu_per+sep+str(scaleFact)+sep+applyLR+sep+str(mH)
             ### To run macro for ZZ analysis, please, uncomment the following line and comment the previous one.
             ### Electron ID in ZZanalysis is not up to date to 2l2j analysis - 16 April 2012 
             #cmd="zz "+path+d+" "+"NoNorm_" + channel + "/"+ a + str(list.index(d))+".root" +sep+data+sep+sf+sep+channel+sep+wt+sep+txt+sep+pu_per+sep+applyfix
