@@ -1,5 +1,3 @@
-
-
 #include "TFile.h"
 #include "TTree.h"
 #include "TBranch.h"
@@ -21,6 +19,7 @@
 #include "HiggsAnalysis/Higgs2l2b/interface/QGLikelihoodCalculator.h"
 #include "HiggsAnalysis/Higgs2l2b/interface/MuonEffectiveArea.h"
 #include "HiggsAnalysis/Higgs2l2b/interface/ElectronEffectiveArea.h"
+#include "HiggsAnalysis/Higgs2l2b/interface/LineshapeWeight.h"
 #include "../interface/LeptonID.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "HiggsAnalysis/Higgs2l2b/interface/table.h"
@@ -130,6 +129,8 @@ bool EleIDTightCuts( bool isEleBarrel, float DPhiAtVtx, float HOverE) {
 // tree  --> write tree output
 // txt  --> write txt output
 
+// LR --> apply Lineshape Reweighting (for powheg MC only)
+
 int main(int argc, char **argv) {
   std::cout<<"Let's start"<<endl;
   gSystem->Load("libFWCoreFWLite.so");
@@ -142,13 +143,14 @@ int main(int argc, char **argv) {
   string writeTree(argv[6]);
   string writeTxt(argv[7]);
   string PUPeriod(argv[8]);
-  string fixMuRunB(argv[9]);
-  string scaleFactor(argv[10]);
+  //  string fixMuRunB(argv[9]);
+  string scaleFactor(argv[9]);
+  string applyLR_(argv[10]);
   string outFileName(outFile);
 
   bool data = false;
   bool btagScale = false;
-  bool fixMu = false;
+  //  bool fixMu = false;
   std::stringstream ss;
   ss<<scaleFactor;
   float scaleFact;
@@ -167,10 +169,16 @@ int main(int argc, char **argv) {
     cout<<"SF will be applied!!!"<<endl;
   }
 
-  if(fixMuRunB == "fixMu"){
-    fixMu=true;
-    cout << "Mu FIX for runB applied" << endl;
-  }
+  bool applyLR(false);
+  if( applyLR_ == "LR"){ 
+    applyLR = true;
+    cout << "Lineshape Reweighting will be applied!!! (Powheg signal MC only)" << endl;
+ }
+
+  //  if(fixMuRunB == "fixMu"){
+  //    fixMu=true;
+  //    cout << "Mu FIX for runB applied" << endl;
+  //  }
 
   bool muChannel(false);
   if(selChan == "Mu")
@@ -408,6 +416,13 @@ int main(int argc, char **argv) {
   
   }
 
+
+  // Lineshape reweighting util
+  LineshapeWeight * LRUtil;
+  if(applyLR){
+    LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs400_8TeV_W.txt_I.txt");
+  }
+  
   //QGLike discriminator
   string QGFilePDF = "QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root";
   QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator( QGFilePDF );
@@ -416,9 +431,12 @@ int main(int argc, char **argv) {
 
   vdouble runNumber, evtNumber,lumiBlock;
   vint runNumSkim;
+  double LRweight(1.0);
+  double LRweightErrp(0.0);
+  double LRweightErrm(0.0);
+
   for(unsigned int i = 0; i <nEvents; ++i) {
    
-
     //    if(i%100 == 0) progress(double(i)/double(nEvents));
     ++count[0];
     // variables for HLT selection
@@ -434,10 +452,10 @@ int main(int argc, char **argv) {
     GETENTRY(rho,i);
 
     // ------ TO DECIDE WHAT TO DO WITH TRIGGER BITS -------
-    GETENTRY(passSingleMuTrig,i);
-    GETENTRY(passDoubleMuTrig,i);
-    GETENTRY(passSingleElTrig,i);
-    GETENTRY(passDoubleElTrig,i);
+    //    GETENTRY(passSingleMuTrig,i);
+    //    GETENTRY(passDoubleMuTrig,i);
+    //    GETENTRY(passSingleElTrig,i);
+    //    GETENTRY(passDoubleElTrig,i);
     // -----------------------------------------------------
 
 
@@ -448,7 +466,14 @@ int main(int argc, char **argv) {
     double IDweight_2 = 1.0;
     double IDweight = 1.0;
     
-   
+    // assign event weight for Lineshape Reweighting
+    if(applyLR){
+      BRANCHFLOAT(genHiggsMass);    
+      GETENTRY(genHiggsMass,i);    
+      LRUtil->getWeight( getInt(genHiggsMass), LRweight, LRweightErrp, LRweightErrm);
+      cout << "Hmass = " << getInt(genHiggsMass) << " LRweight = " << LRweight << endl;
+    }
+
  
     if(!data){
       //      BRANCHFLOAT(nGenInt);
@@ -493,6 +518,10 @@ int main(int argc, char **argv) {
     }
 
     evtWeight = PUWeight;
+    if(applyLR){
+      evtWeight *= LRweight;
+    }
+
     // HLT selection: exclusive double trig selection
     //if((PUPeriod == "2012A") || (PUPeriod == "2012B") )
       // if(!passTrigPath)

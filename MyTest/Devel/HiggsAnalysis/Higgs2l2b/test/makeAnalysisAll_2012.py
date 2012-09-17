@@ -67,7 +67,7 @@ for channel in channels:
       wt = "tree"
       txt = "txt"
       path = "/data3/scratch/users/decosa/Higgs/Summer12/"+a+"/"+ ntupleFolder+ "/"
-      applyfix = "NOfixMu"
+#      applyfix = "NOfixMu"
       scaleFact = 1
       if( (not a.startswith("ElRun")) and (not  a.startswith("MuRun"))): scaleFact = scale[a]
       
@@ -101,7 +101,7 @@ for channel in channels:
       for d in list:
          if d.endswith('.root'):
             
-            cmd="2l2b_2012 "+path+d+" "+"NoNorm_" + channel + "/"+ a + str(list.index(d))+".root" +sep+data+sep+sf+sep+channel+sep+wt+sep+txt+sep+pu_per+sep+applyfix + sep + str(scaleFact)
+            cmd="2l2b_2012 "+path+d+" "+"NoNorm_" + channel + "/"+ a + str(list.index(d))+".root" +sep+data+sep+sf+sep+channel+sep+wt+sep+txt+sep+pu_per+sep+str(scaleFact)
             ### To run macro for ZZ analysis, please, uncomment the following line and comment the previous one.
             ### Electron ID in ZZanalysis is not up to date to 2l2j analysis - 16 April 2012 
             #cmd="zz "+path+d+" "+"NoNorm_" + channel + "/"+ a + str(list.index(d))+".root" +sep+data+sep+sf+sep+channel+sep+wt+sep+txt+sep+pu_per+sep+applyfix
