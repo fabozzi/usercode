@@ -27,11 +27,11 @@ samples = [ "ZZ", "TT", "DYJetsToLL_M-50"]
 ## lumiB = 2508.0
 
 if(ch=="Mu"):
-    lumiA = 800.7
-    lumiB = 4342
+    lumiA = 709
+    lumiB = 4404
 if(ch =="El"):
-    lumiA = 794.4
-    lumiB = 4342
+    lumiA = 705
+    lumiB = 4404
 
     
 zerobtag = 216736
