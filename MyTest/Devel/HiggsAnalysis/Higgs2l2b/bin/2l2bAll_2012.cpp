@@ -417,9 +417,6 @@ int main(int argc, char **argv) {
       else Lumi3DWeights_.weight3D_init(1.0);
     }
     else cout << "ERROR!!!!! Run period not existent!!!!!!" << endl;
-
-  
-  
   }
 
   // Lineshape reweighting util
@@ -428,6 +425,14 @@ int main(int argc, char **argv) {
   //QGLike discriminator
   string QGFilePDF = "QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root";
   QGLikelihoodCalculator *qglikeli = new QGLikelihoodCalculator( QGFilePDF );
+
+
+  // File with lepton eff weights
+  TFile* file_eff = TFile::Open("Weights.root");
+  Weights elEff( file_eff , "EleIDEffLoose" );
+    cout << "LOADING WEIGHTS" << endl;
+    //  Weights elEff("Weights.root", "EleIDEffLoose");
+
 
   // LOOP on EVENTS
 
@@ -618,10 +623,9 @@ int main(int argc, char **argv) {
       // flag to dump event variables
       bool isEventSelected(false);
 
-      table ElTable("sFGsfIdLoose.txt"); 
+      //table ElTable("sFGsfIdLoose.txt"); 
       //table MuTable("PfToId.txt"); 
 
-      Weights elEff("Weights.root", "ElIDEff");
       // LOOP on CANDIDATES IN THE EVENT
       for(unsigned int j = 0; j < cands; ++j) {
 	++cand[1];
