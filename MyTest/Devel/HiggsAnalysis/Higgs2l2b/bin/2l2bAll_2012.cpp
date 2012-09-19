@@ -197,7 +197,8 @@ int main(int argc, char **argv) {
   //    if(selType == "sig")
   //      signalSel = true;
 
-  vdouble bestHiggsMass, bestmjj, bestHiggsMass_1btag, bestHiggsMass_0btag, weight, btagFlag, channel, puWeight, lumiWeight;
+  vdouble bestHiggsMass, bestmjj, bestHiggsMass_1btag, bestHiggsMass_0btag, weight, btagFlag, channel, 
+    puWeight, lrWeight, idWeight, lumiWeight;
 
 
   TFile *f = TFile::Open(path, "READ");
@@ -358,8 +359,8 @@ int main(int argc, char **argv) {
   TH1F lljjmass_noRefit_sb("lljjmassNoRefit_sb", "m(lljj)", 1000, 0, 1000);
   TH1F lljjmassFinal_sb("lljjmassFinal_sb", "m(lljj)", 1000, 0, 1000);
   TH1F lljjmassFinal_noRefit_sb("lljjmassFinalNoRefit_sb", "m(lljj)", 1000, 0, 1000);
- TH1F lljjmassFinal_0btagsb("lljjmassFinal_0btagsb", "m(lljj)", 1000, 0, 1000);
- TH1F lljjmassFinal_1btagsb("lljjmassFinal_1btagsb", "m(lljj)", 1000, 0, 1000);
+  TH1F lljjmassFinal_0btagsb("lljjmassFinal_0btagsb", "m(lljj)", 1000, 0, 1000);
+  TH1F lljjmassFinal_1btagsb("lljjmassFinal_1btagsb", "m(lljj)", 1000, 0, 1000);
 
 
   const unsigned int counts = 7;
@@ -430,9 +431,7 @@ int main(int argc, char **argv) {
   // File with lepton eff weights
   TFile* file_eff = TFile::Open("Weights.root");
   Weights elEff( file_eff , "EleIDEffLoose" );
-    cout << "LOADING WEIGHTS" << endl;
-    //  Weights elEff("Weights.root", "EleIDEffLoose");
-
+  cout << "LOADING EFFICIENCY TABLES" << endl;
 
   // LOOP on EVENTS
 
@@ -453,12 +452,10 @@ int main(int argc, char **argv) {
     GETENTRY(rhoRestrictedEta,i);
     GETENTRY(rho,i);
 
-    // assign event weights 
-    double evtWeight = 1.0;
+    // define now GLOBAL event weights (= same for all candidates) 
+    double globWeight = 1.0;
+    //    double evtWeight = 1.0;
     double PUWeight = 1.0;
-    double IDweight_1 = 1.0;
-    double IDweight_2 = 1.0;
-    double IDweight = 1.0;
     double LRweight(1.0);
     double LRweightErrp(0.0);
     double LRweightErrm(0.0);
@@ -495,15 +492,16 @@ int main(int argc, char **argv) {
       //      cout<<"numInt: "<< getInt(trueNInt) <<endl;
       if(PUPeriod == "2012All") {
 	PUWeight = LumiWeights_.weight(getInt(trueNInt));
-	//cout<<"WEIGHT: "<< evtWeight <<endl;
       }
       else PUWeight = Lumi3DWeights_.weight3D( getInt(nGenIntBXm1), getInt(nGenIntBX0), getInt(nGenIntBXp1) );
     }      
 
-    evtWeight = PUWeight;
+    globWeight = PUWeight;
+    cout << "PUweight:" << PUWeight << endl;
+    cout<<"glob WEIGHT: "<< globWeight <<endl;
 
     // fill histo of numPV (reweighted and not)
-    npv.Fill(getInt(numPV),evtWeight);
+    npv.Fill(getInt(numPV),PUWeight);
     npv_woReweight.Fill(getInt(numPV));
     //runNumber.push_back(get((muHiggsRunNumber));
     GETENTRY(CleanJetPt,i);
@@ -515,8 +513,11 @@ int main(int argc, char **argv) {
 
     // including also LR to the event weight
     if(applyLR){
-      evtWeight *= LRweight;
+      globWeight = PUWeight * LRweight;
     }
+
+    cout << "LRweight:" << LRweight << endl;
+    cout<<"glob WEIGHT: "<< globWeight <<endl;
 
     // get number of candidates in the event
     if(muChannel) {
@@ -551,8 +552,11 @@ int main(int argc, char **argv) {
       bool exist2tagSB(false), exist1tagSB(false), exist0tagSB(false);
       double ch2tag(-10), ch1tag(-10), ch0tag(-10);
       double ch2tagSB(-10), ch1tagSB(-10), ch0tagSB(-10);
-      double puw2tag(-10), puw1tag(-10), puw0tag(-10);
-      double puw2tagSB(-10), puw1tagSB(-10), puw0tagSB(-10);
+      double wei2tag(-10), wei1tag(-10), wei0tag(-10);
+      double wei2tagSB(-10), wei1tagSB(-10), wei0tagSB(-10);
+      double wei2tag_temp(-10);
+      double idw2tag(-10), idw1tag(-10), idw0tag(-10);
+      double idw2tagSB(-10), idw1tagSB(-10), idw0tagSB(-10);
 
       float ResidZllMassBest_(10000.), ResidZllMassBest_Final(10000.);
       float ResidZllMassBest1tag_(10000.);
@@ -630,7 +634,12 @@ int main(int argc, char **argv) {
       for(unsigned int j = 0; j < cands; ++j) {
 	++cand[1];
 	double ch;
-	
+	// define CANDIDATE-dependent weights (reset for each cand)
+	double evtWeight = globWeight;
+	double IDweight_1 = 1.0;
+	double IDweight_2 = 1.0;
+	double IDweight = 1.0;
+
 	// std::cout<<"candidates loop"<<std::endl;
 	  
 	// fill histo of db of the muon candidates
@@ -922,15 +931,15 @@ int main(int argc, char **argv) {
 
 	  //std::cout<<"id boolean: "<<isoIDLepCut<<std::endl;
 
-	  //IDweight_1 = ElTable.Val(lept1pt_, lept1eta_);
-	  IDweight_1 = elEff.getEff( lept1eta_, lept1pt_);
-	  //std::cout<<"El eff1: "<<IDweight_1<<std::endl;
-	  //IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
-	  IDweight_2 = elEff.getEff( lept2eta_, lept2pt_);
-
-	  //std::cout<<"El eff2: "<<IDweight_2<<std::endl;
-
-
+	  if(!data) {
+	    //IDweight_1 = ElTable.Val(lept1pt_, lept1eta_);
+	    IDweight_1 = elEff.getEff( fabs(lept1eta_), lept1pt_);
+	    std::cout<< "el1_pt = " <<  lept1pt_ << " el1_eta = " <<  lept1eta_ << " --> El1 eff wei: "<< IDweight_1 << std::endl;
+	    //IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
+	    IDweight_2 = elEff.getEff( fabs(lept2eta_), lept2pt_);
+	    std::cout<< "el2_pt = " <<  lept2pt_ << " el2_eta = " <<  lept2eta_ << " --> El2 eff wei: "<< IDweight_2 << std::endl;
+	    IDweight = IDweight_1 * IDweight_2;
+	  }
 
 	  zllcharge_ = get(elHiggszllCharge,j);
 	  zllmass_ = get(elHiggszllMass,j);
@@ -1000,9 +1009,11 @@ int main(int argc, char **argv) {
 
 	//BTagSFUtil* btsfutil = new BTagSFUtil(TMath::Sin(Jet1phi_*1000000));
 	//BTagSFUtil* btsfutil2 = new BTagSFUtil(TMath::Sin(Jet2phi_*1000000));
-	if(!data) IDweight = IDweight_1 * IDweight_2;
-	//	evtWeight = PUWeight*IDweight;
-	evtWeight *= IDweight;
+	if(!data) {
+	  evtWeight *= IDweight;
+	}
+	cout << "IDweight:" << IDweight << endl;
+	cout<<"WEIGHT: "<< evtWeight <<endl;
 
 
 	if(kineLepCut && fiducialCut && dbLepCut && isoIDLepCut && kineJetCut &&  zchargecut && !unclean) {
@@ -1019,11 +1030,16 @@ int main(int argc, char **argv) {
 	  // fill plots after lepton selection
 	  if (!hasAlreadyCand_preZllcut){
 	    zllmass.Fill(zllmass_,evtWeight);
-	    if(abs(lept1eta_)< 0.8 && abs(lept2eta_)< 0.8)zllmass_BB.Fill(zllmass_,evtWeight);
+	    if(fabs(lept1eta_)< 0.8 && fabs(lept2eta_)< 0.8)zllmass_BB.Fill(zllmass_,evtWeight);
 	    hasAlreadyCand_preZllcut = true;
 	    }
 	  npv1.Fill(getInt(numPV),evtWeight);
+
+	  // WHAT'S THIS???? Should not be filled at cand level!
 	  njets_ = nj;
+	  if(njets_!=-1) njets.Fill(njets_,evtWeight);
+	  //
+
 	  // Z inv. mass selection	  
 	  bool zllcut = (zllmass_ > 70) && (zllmass_ < 110);
 	  // bool zllcut = (zllmass_ > 60) && (zllmass_ < 120);
@@ -1200,6 +1216,7 @@ int main(int argc, char **argv) {
 		    // if best candidate store its variables
 		    //		  SumPtBest_= Jet1pt_rf+ Jet2pt_rf;
 		    ResidZllMassBest_=  ResidZZMass_;
+		    wei2tag_temp = evtWeight;
 		    cos1_Best=cos1_;
 		    cos2_Best=cos2_;
 		    cosStar_Best= cosStar_;
@@ -1228,7 +1245,8 @@ int main(int argc, char **argv) {
 		      // if best candidate store lljj mass
 		      //		    SumPtBest_Final= Jet1pt_rf+ Jet2pt_rf;
 		      exist2tag = true;
-		      puw2tag = evtWeight;
+		      wei2tag = evtWeight;
+		      idw2tag = IDweight;
 		      ch2tag = ch;
 		      //cout<<"lept channel "<<ch2tag<<endl;
 		      ResidZllMassBest_Final=  ResidZZMass_;
@@ -1264,7 +1282,8 @@ int main(int argc, char **argv) {
 		  if ( ( ResidZZMass_ < ResidZllMassBest1tag_) && (higgsrefitMass>0) ){
 		    // if best candidate store lljj mass
 		    exist1tag = true;
-		    puw1tag = evtWeight;
+		    wei1tag = evtWeight;
+		    idw1tag = IDweight;
 		      
 		    ch1tag = ch;
 		    ResidZllMassBest1tag_ =  ResidZZMass_;
@@ -1304,7 +1323,8 @@ int main(int argc, char **argv) {
 		    // check if it is the best candidate at this level
 		    if ( ( ResidZZMass_< ResidZllMassBest0tag_) && (higgsrefitMass>0) ){
 		      exist0tag = true;
-		      puw0tag = evtWeight;
+		      wei0tag = evtWeight;
+		      idw0tag = IDweight;
 		      ch0tag = ch;
 		      ResidZllMassBest0tag_ =  ResidZZMass_;
 		      lljjmass_0btag_ = higgsrefitMass;
@@ -1380,19 +1400,24 @@ int main(int argc, char **argv) {
 	      hmassnorefit_sb_2b.Fill(higgsMass);
 	      //
 	      if( getInt(metSignificance) < 10) {
+
+		// BE CAREFUL with the weight applied to these variables!
+		lljjmass_sb.Fill(lljjmass_SB,evtWeight);
+		lljjmass_noRefit_sb.Fill(lljjmass_noRefit_SB,evtWeight);
 		// best candidate in the sideband after metSig
-		if ( ((Jet1pt_rf+ Jet2pt_rf)>SumPtBest_SB) && (higgsrefitMass>0) ){
-		  SumPtBest_SB= Jet1pt_rf+ Jet2pt_rf;
-		  lljjmass_SB= higgsrefitMass;
-		  lljjmass_noRefit_SB= higgsMass;
-		}		
+		//		if ( ((Jet1pt_rf+ Jet2pt_rf)>SumPtBest_SB) && (higgsrefitMass>0) ){
+		//		  SumPtBest_SB= Jet1pt_rf+ Jet2pt_rf;
+		//		  lljjmass_SB= higgsrefitMass;
+		//		  lljjmass_noRefit_SB= higgsMass;
+		//		}		
 		if( hLD_rf > 0.5 ){
 		  // best candidate in the sideband after hLD
 		  if ( ( ResidZZMass_ < ResidZllMassBestSB2tag_) && (higgsrefitMass>0) ){
 		    //		  if ( ( (Jet1pt_rf+ Jet2pt_rf)>SumPtBest_FinalSB) && (higgsrefitMass>0) ){
 		    // SumPtBest_FinalSB= Jet1pt_rf+ Jet2pt_rf;
 		    exist2tagSB = true;
-		    puw2tagSB = evtWeight;
+		    wei2tagSB = evtWeight;
+		    idw2tagSB = IDweight;
 		    ch2tagSB = ch;
 		    ResidZllMassBestSB2tag_ =  ResidZZMass_; 
 		    lljjmassFinal_SB = higgsrefitMass;
@@ -1416,7 +1441,8 @@ int main(int argc, char **argv) {
 		  if ( ( ResidZZMass_< ResidZllMassBestSB1tag_) && (higgsrefitMass>0) ){
 		    // if best candidate store lljj mass
 		    exist1tagSB = true;
-		    puw1tagSB = evtWeight;
+		    wei1tagSB = evtWeight;
+		    idw1tagSB = IDweight;
 		    ch1tagSB = ch;
 		    ResidZllMassBestSB1tag_ =  ResidZZMass_;
 		    lljjmassFinal_SB_1btag_= higgsrefitMass;
@@ -1439,7 +1465,8 @@ int main(int argc, char **argv) {
 		    // check if it is the best candidate at this level
 		    if ( ( ResidZZMass_ < ResidZllMassBestSB0tag_) && (higgsrefitMass>0) ){
 		      exist0tagSB = true;
-		      puw0tagSB = evtWeight;
+		      wei0tagSB = evtWeight;
+		      idw0tagSB = IDweight;
 		      ch0tagSB = ch;
 		      ResidZllMassBestSB0tag_ =  ResidZZMass_;
 		      lljjmassFinal_SB_0btag_ = higgsrefitMass;
@@ -1462,15 +1489,17 @@ int main(int argc, char **argv) {
       //std::cout<<"writeText: "<<writeText<<std::endl;
       // fill best candidate plots
       if((lljjmass_!=0) && exist2tag) { 
-	lljjmass.Fill(lljjmass_, evtWeight);
+	lljjmass.Fill(lljjmass_, wei2tag);
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_);
 	bestmjj.push_back(zjjmass_2btag_);
 	btagFlag.push_back(2.);
 	if(muChannel) channel.push_back(1.);
 	else channel.push_back(0.);
-	weight.push_back(evtWeight*scaleFact);
+	weight.push_back(wei2tag*scaleFact);
 	puWeight.push_back(PUWeight);
+	lrWeight.push_back(LRweight);
+	idWeight.push_back(idw2tag);
 	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum2Tag_);
 	evtNumber.push_back( EvtNum2Tag_);
@@ -1493,7 +1522,7 @@ int main(int argc, char **argv) {
 		 << "2b" << endl;
       }
       if((lljjmass_1btag_!=0) && !exist2tag && exist1tag) { 
-	lljjmass_1btag.Fill(lljjmass_1btag_, evtWeight);
+	lljjmass_1btag.Fill(lljjmass_1btag_, wei1tag);
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_1btag_);
 	bestmjj.push_back(zjjmass_1btag_);
@@ -1501,8 +1530,10 @@ int main(int argc, char **argv) {
 	if(muChannel) channel.push_back(1.);
 	else channel.push_back(0.);
 
-	weight.push_back(evtWeight*scaleFact);
+	weight.push_back(wei1tag*scaleFact);
 	puWeight.push_back(PUWeight);
+	lrWeight.push_back(LRweight);
+	idWeight.push_back(idw1tag);
 	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum1Tag_);
 	evtNumber.push_back( EvtNum1Tag_);
@@ -1525,15 +1556,17 @@ int main(int argc, char **argv) {
 		 << "1b" << endl;
       }
       if((lljjmass_0btag_!=0) && !exist2tag && !exist1tag && exist0tag) { 
-	lljjmass_0btag.Fill(lljjmass_0btag_, evtWeight);
+	lljjmass_0btag.Fill(lljjmass_0btag_, wei0tag);
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_0btag_);
 	bestmjj.push_back(zjjmass_0btag_);
 	btagFlag.push_back(0.);
 	if(muChannel) channel.push_back(1.);
 	else channel.push_back(0.);
-	weight.push_back(evtWeight*scaleFact);
+	weight.push_back(wei0tag*scaleFact);
 	puWeight.push_back(PUWeight);
+	lrWeight.push_back(LRweight);
+	idWeight.push_back(idw0tag);
 	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum0Tag_);
 	evtNumber.push_back( EvtNum0Tag_);
@@ -1557,61 +1590,67 @@ int main(int argc, char **argv) {
       }
 
       if((lljjmassFinal_SB!=0) && !exist2tag && !exist1tag && !exist0tag &&  exist2tagSB) {
-      	lljjmass_2btagSB.Fill(lljjmassFinal_SB, evtWeight);
+      	lljjmass_2btagSB.Fill(lljjmassFinal_SB, wei2tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB);
       	bestmjj.push_back(zjjmass_SB2btag_);
       	btagFlag.push_back(2.);
 	if(muChannel) channel.push_back(1.);
 	else channel.push_back(0.);
   
-      	weight.push_back(evtWeight*scaleFact);
+      	weight.push_back(wei2tagSB*scaleFact);
       	puWeight.push_back(PUWeight);
+      	lrWeight.push_back(LRweight);
+      	idWeight.push_back(idw2tagSB);
       	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum2TagSB_);
 	evtNumber.push_back( EvtNum2TagSB_);
 	lumiBlock.push_back( LumiBlock2TagSB_);
       }
       if((lljjmassFinal_SB_1btag_!=0) && !exist2tag && !exist1tag && !exist0tag &&  !exist2tagSB && exist1tagSB) {
-      	lljjmass_1btagSB.Fill(lljjmassFinal_SB_1btag_, evtWeight);
+      	lljjmass_1btagSB.Fill(lljjmassFinal_SB_1btag_, wei1tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB_1btag_);
       	bestmjj.push_back(zjjmass_SB1btag_);
       	btagFlag.push_back(1.);
 	if(muChannel) channel.push_back(1.);
 	else channel.push_back(0.);
   
-      	weight.push_back(evtWeight*scaleFact);
+      	weight.push_back(wei1tagSB*scaleFact);
       	puWeight.push_back(PUWeight);
+      	lrWeight.push_back(LRweight);
+      	idWeight.push_back(idw1tagSB);
       	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum1TagSB_);
 	evtNumber.push_back( EvtNum1TagSB_);
 	lumiBlock.push_back( LumiBlock1TagSB_);
       }
       if((lljjmassFinal_SB_0btag_!=0) && !exist2tag && !exist1tag && !exist0tag &&  !exist2tagSB && !exist1tagSB && exist0tagSB) {
-      	lljjmass_0btagSB.Fill(lljjmassFinal_SB_0btag_, evtWeight);
+      	lljjmass_0btagSB.Fill(lljjmassFinal_SB_0btag_, wei0tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB_0btag_);
       	bestmjj.push_back(zjjmass_SB0btag_);
       	btagFlag.push_back(0.);
 	if(muChannel) channel.push_back(1.);
 	else channel.push_back(0.);
   
-      	weight.push_back(evtWeight*scaleFact);
+      	weight.push_back(wei0tagSB*scaleFact);
       	puWeight.push_back(PUWeight);
+      	lrWeight.push_back(LRweight);
+      	idWeight.push_back(idw0tagSB);
       	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum0TagSB_);
 	evtNumber.push_back( EvtNum0TagSB_);
 	lumiBlock.push_back( LumiBlock0TagSB_);
       }
 
-
-      if(njets_!=-1) njets.Fill(njets_,evtWeight);
       if((lljjmass_noRefit_!=0) && exist2tag) 
-	lljjmass_noRefit.Fill(lljjmass_noRefit_,evtWeight);
-      if(hLD_Best!=-10) helyLD.Fill(hLD_Best,evtWeight);
-      if(cos1_Best!=-10) cosT1.Fill(cos1_Best,evtWeight);
-      if(cos2_Best!=-10) cosT2.Fill(cos2_Best,evtWeight);
-      if(cosStar_Best!=-10) cosT1Star.Fill(cosStar_Best,evtWeight);
-      if(phi_Best!=-10) phi.Fill(phi_Best,evtWeight);
-      if(phiStar_Best!=-10) phiStar.Fill(phiStar_Best,evtWeight);
+	lljjmass_noRefit.Fill(lljjmass_noRefit_,wei2tag);
+
+      // BE CAREFUL with the weight applied to these variables!
+      if(hLD_Best!=-10) helyLD.Fill(hLD_Best,wei2tag_temp);
+      if(cos1_Best!=-10) cosT1.Fill(cos1_Best,wei2tag_temp);
+      if(cos2_Best!=-10) cosT2.Fill(cos2_Best,wei2tag_temp);
+      if(cosStar_Best!=-10) cosT1Star.Fill(cosStar_Best,wei2tag_temp);
+      if(phi_Best!=-10) phi.Fill(phi_Best,wei2tag_temp);
+      if(phiStar_Best!=-10) phiStar.Fill(phiStar_Best,wei2tag_temp);
  
       // if(hLD_rfBest!=-10) helyLD_RF.Fill(hLD_rfBest,evtWeight);
       // if(cos1_rfBest!=-10) cosT1_RF.Fill(cos1_rfBest,evtWeight);
@@ -1619,11 +1658,9 @@ int main(int argc, char **argv) {
       // if(cosStar_rfBest!=-10) cosT1Star_RF.Fill(cosStar_rfBest,evtWeight);
       // if(phi_rfBest!=-10) phi_RF.Fill(phi_rfBest,evtWeight);
       // if(phiStar_rfBest!=-10) phiStar_RF.Fill(phiStar_rfBest,evtWeight);
+      if(lljjmassFinal_SB != 0) lljjmassFinal_sb.Fill(lljjmassFinal_SB,wei2tagSB);
+      if(lljjmassFinal_noRefit_SB != 0) lljjmassFinal_noRefit_sb.Fill(lljjmassFinal_noRefit_SB,wei2tagSB);
 
-      if(lljjmass_SB != 0) lljjmass_sb.Fill(lljjmass_SB,evtWeight);
-      if(lljjmass_noRefit_SB != 0) lljjmass_noRefit_sb.Fill(lljjmass_noRefit_SB,evtWeight);
-      if(lljjmassFinal_SB != 0) lljjmassFinal_sb.Fill(lljjmassFinal_SB,evtWeight);
-      if(lljjmassFinal_noRefit_SB != 0) lljjmassFinal_noRefit_sb.Fill(lljjmassFinal_noRefit_SB,evtWeight);
 
 
     }  // if cands > 0 ...
@@ -1645,6 +1682,8 @@ int main(int argc, char **argv) {
     double mjj;
     double w;
     double pu_w;
+    double lr_w;
+    double id_w;
     double lumi_w;
     double btagCat;
     double leptChannel;
@@ -1655,6 +1694,8 @@ int main(int argc, char **argv) {
     lljjmassTree.Branch("mJJ", &mjj, "mJJ/D");
     lljjmassTree.Branch("weight", &w, "weight/D");
     lljjmassTree.Branch("PUweight", &pu_w, "PUweight/D");
+    lljjmassTree.Branch("LRweight", &lr_w, "LRweight/D");
+    lljjmassTree.Branch("IDweight", &id_w, "IDweight/D");
     lljjmassTree.Branch("lumiweight", &lumi_w, "lumiweight/D");
     lljjmassTree.Branch("nBTags", &btagCat, "nBTags/D");
     lljjmassTree.Branch("lep", &leptChannel, "lep/D");
@@ -1672,6 +1713,8 @@ int main(int argc, char **argv) {
       btagCat = btagFlag[i];
       w = weight[i];
       pu_w = puWeight[i];
+      lr_w = lrWeight[i];
+      id_w = idWeight[i];
       lumi_w = lumiWeight[i];
       leptChannel = channel[i];
       runNum = runNumber[i];
