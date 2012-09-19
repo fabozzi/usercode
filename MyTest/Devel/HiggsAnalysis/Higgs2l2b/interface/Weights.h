@@ -6,10 +6,8 @@ class Weights{
 
  public:
   Weights( TFile * file , std::string name ){
-    //    TFile file(filename.c_str());
     histoFile = file;
     wHisto = (TH2F*)histoFile->Get(name.c_str());
-    cout << "CONSTRUCTING CLASS" << endl;
   }
 
   float getEff(float eta, float pt){ 
