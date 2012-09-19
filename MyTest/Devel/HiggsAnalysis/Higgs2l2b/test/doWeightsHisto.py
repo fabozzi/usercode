@@ -14,71 +14,139 @@ ROOT.gROOT.SetBatch()  # don't pop up canvases
 ### Set the name of the histo.
 ### Set the values in effArray, it is an array of arrays.
 
-### ******* El ID eff *******
-### *************************
 
+names = [ "EleIDEffLoose", "Ele8TriggerEff", "Ele17TriggerEff" ]
 
-def fillFile(name):
+### ******* El ID eff: data/MC SF *******
+### *************************************
+name_EleWPLoose = "EleIDEffLoose"
 
-    if(name=="ElIDEff"):
-        arrayEta  = array.array("f", [0.00, 0.80, 1.44, 1.56, 2.00, 2.50]) # Define eta and Pt ranges
-        arrayPt = array.array("f", [10, 15, 20, 30, 40, 50, 200])
+arrayEta_EleWPLoose  = array.array("f", [0.00, 0.80, 1.4442, 1.566, 2.00, 2.50]) # Define eta and Pt ranges
+arrayPt_EleWPLoose = array.array("f", [10, 15, 20, 30, 40, 50, 200])
 
-        ## #Range di Pt [10-15, 15-20, 20-30, 30-40, 40-50, 50-200]         
-        effArray = [
-                       [0.989, 1.063, 1.034, 1.019, 1.016, 1.007],   # 0.00 < eta < 0.80  
-                       [1.125, 1.046, 1.010, 1.008, 1.003, 0.996],   # 0.80 < eta < 1.44 
-                       [1.313, 1.016, 1.051, 0.992, 0.980, 1.018],   # 1.44 < eta < 1.56
-                       [0.823, 1.100, 1.007, 0.998, 1.006, 1.002],   # 1.56 < eta < 2.00
-                       [1.450, 1.173, 1.096, 1.053, 1.028, 1.011]   # 2.00 < eta < 2.50
-                   ]
+#Range di Pt            [10-15, 15-20, 20-30, 30-40, 40-50, 50-200]         
+effArray_EleWPLoose = [
+                        [0.989, 1.063, 1.034, 1.019, 1.016, 1.007],   # 0.00 < eta < 0.80  
+                        [1.125, 1.046, 1.010, 1.008, 1.003, 0.996],   # 0.80 < eta < 1.44 
+                        [1.313, 1.016, 1.051, 0.992, 0.980, 1.018],   # 1.44 < eta < 1.56
+                        [0.823, 1.100, 1.007, 0.998, 1.006, 1.002],   # 1.56 < eta < 2.00
+                        [1.450, 1.173, 1.096, 1.053, 1.028, 1.011]    # 2.00 < eta < 2.50
+                      ]
+
+errArray_EleWPLoose = [
+                        [0.0645, 0.0249, 0.0053, 0.0022, 0.0005, 0.0030],   # 0.00 < eta < 0.80  
+                        [0.0657, 0.0237, 0.0062, 0.0026, 0.0019, 0.0037],   # 0.80 < eta < 1.44 
+                        [0.2760, 0.0812, 0.0232, 0.0111, 0.0101, 0.0175],   # 1.44 < eta < 1.56
+                        [0.0784, 0.0344, 0.0098, 0.0047, 0.0036, 0.0062],   # 1.56 < eta < 2.00
+                        [0.1184, 0.0378, 0.0119, 0.0021, 0.0052, 0.0082]    # 2.00 < eta < 2.50
+                      ]
 
 ### ******* Ele8 trigger eff *******
-### *************************
-    elif(name == "Ele8TriggerEff"):
-        arrayEta  = array.array("f", [0.00, 0.80, 1.44, 1.55, 2.00, 2.50])
-        arrayPt = array.array("f", [10, 20, 40, 200])
-        #Range di Pt [10-20, 20-40, 40-200]         
-        effArray = [
-             [1.062, 1.005, 0.999],   # 0.00 < eta < 0.80  
-             [1.038, 0.995, 0.999],   # 0.80 < eta < 1.44 
-             [1.,1.,1.],              # 1.44 < eta < 1.55
-             [1.010, 0.997, 0.998],   # 1.55 < eta < 2.00
-             [1.013, 0.999, 0.998]   # 2.00 < eta < 2.50
-            ]
+### *******************************
+name_EleTrig8 = "Ele8TriggerEff"
+
+### Define eta and Pt ranges
+
+arrayEta_EleTrig8  = array.array("f", [0.00, 0.80, 1.4442, 1.566, 2.00, 2.50])
+arrayPt_EleTrig8 = array.array("f", [10, 20, 40, 200])
+
+#Range di Pt       [10-20, 20-40, 40-200]         
+effArray_EleTrig8 = [
+                      [0.9545, 0.9830, 0.9889],   # 0.00 < eta < 0.80  
+                      [0.8521, 0.9316, 0.9715],   # 0.80 < eta < 1.44 
+                      [1.,1.,1.],                 # 1.44 < eta < 1.56
+                      [0.8387, 0.8948, 0.9380],   # 1.56 < eta < 2.00
+                      [0.8677, 0.9331, 0.9508]    # 2.00 < eta < 2.50
+                    ]
+
+errArray_EleTrig8 = [
+                      [0.0038, 0.0005, 0.0004],   # 0.00 < eta < 0.80  
+                      [0.0062, 0.0011, 0.0007],   # 0.80 < eta < 1.44 
+                      [0.,0.,0.],                 # 1.44 < eta < 1.55
+                      [0.0106, 0.0021, 0.0014],   # 1.55 < eta < 2.00
+                      [0.0102, 0.0019, 0.0016]    # 2.00 < eta < 2.50
+                    ]
 
 ### ******* Ele17 trigger eff *******
-### *************************
-    elif(name == "Ele17TriggerEff"):
-        arrayEta  = array.array("f", [0.00, 0.80, 1.44, 1.55, 2.00, 2.50]) # Define eta and Pt ranges
-        arrayPt = array.array("f", [10, 20, 40, 200])
-        ## #Range di Pt [10-20, 20-40, 40-200]         
-        effArray = [
-            [0.868, 1.003, 0.998],   # 0.00 < eta < 0.80  
-            [0.751, 0.994, 0.999],   # 0.80 < eta < 1.44 
-            [1.,1.,1.],              # 1.44 < eta < 1.55
-            [0.923, 0.994, 0.997],   # 1.55 < eta < 2.00
-            [0.886, 1.001, 1.000]   # 2.00 < eta < 2.50
-            ]
-        
-        
-    title = name
+### *********************************
+name_EleTrig17 = "Ele17TriggerEff"
+
+### Define eta and Pt ranges
+
+arrayEta_EleTrig17  = array.array("f", [0.00, 0.80, 1.4442, 1.566, 2.00, 2.50])
+arrayPt_EleTrig17 = array.array("f", [10, 20, 40, 200])
+
+#Range di Pt       [10-20, 20-40, 40-200]         
+effArray_EleTrig17 = [
+                       [0.4735, 0.9856, 0.9913],   # 0.00 < eta < 0.80  
+                       [0.3426, 0.9360, 0.9763],   # 0.80 < eta < 1.44 
+                       [1.,1.,1.],                 # 1.44 < eta < 1.56
+                       [0.4439, 0.9006, 0.9447],   # 1.56 < eta < 2.00
+                       [0.4519, 0.9444, 0.9624]    # 2.00 < eta < 2.50
+                     ]
+
+errArray_EleTrig17 = [
+                       [0.0089, 0.0004, 0.0003],   # 0.00 < eta < 0.80  
+                       [0.0082, 0.0011, 0.0006],   # 0.80 < eta < 1.44 
+                       [0.,0.,0.],                 # 1.44 < eta < 1.55
+                       [0.0142, 0.0020, 0.0014],   # 1.55 < eta < 2.00
+                       [0.0148, 0.0018, 0.0014]    # 2.00 < eta < 2.50
+                     ]
+
+
+
+arraysEta = {
+    "EleIDEffLoose" : arrayEta_EleWPLoose,
+    "Ele8TriggerEff" : arrayEta_EleTrig8,
+    "Ele17TriggerEff" : arrayEta_EleTrig17,
+   }
+
+arraysPt = {
+    "EleIDEffLoose" : arrayPt_EleWPLoose,
+    "Ele8TriggerEff" : arrayPt_EleTrig8,
+    "Ele17TriggerEff" : arrayPt_EleTrig17,
+   }
+
+effArrays = {
+    "EleIDEffLoose" : effArray_EleWPLoose,
+    "Ele8TriggerEff" : effArray_EleTrig8,
+    "Ele17TriggerEff" : effArray_EleTrig17,
+   }
+
+errArrays = {
+    "EleIDEffLoose" : errArray_EleWPLoose,
+    "Ele8TriggerEff" : errArray_EleTrig8,
+    "Ele17TriggerEff" : errArray_EleTrig17,
+   }
+
+
+
+#wfile = ROOT.TFile.Open("Weights.root", "UPDATE")
+wfile = ROOT.TFile.Open("Weights.root", "RECREATE")
+
+for name in names:
+
+    print name
+    print len(arraysEta[name])-1
+    print arraysEta[name]
+    print len(arraysPt[name])-1
+    print arraysPt[name]
     
-    histoEff = ROOT.TH2F(name, title, len(arrayEta)-1, arrayEta, len(arrayPt)-1, arrayPt)
+    title = name
+    histoEff = ROOT.TH2F(name, title, len(arraysEta[name])-1, arraysEta[name], len(arraysPt[name])-1, arraysPt[name])
 
-
-    for iEta, values in enumerate(effArray):
+    for iEta, values in enumerate(effArrays[name]):
         [histoEff.SetBinContent(iEta+1, iPt+1, weight) for iPt, weight in enumerate(values)]
+        print iEta, values
+        print iPt, weight
+    for iEta, values in enumerate(errArrays[name]):
+        [histoEff.SetBinError(iEta+1, iPt+1, weight) for iPt, weight in enumerate(values)]
+    histoEff.Write()
+    
+#    histoEff = ROOT.TH2F(name, title, len(arrayEta)-1, arrayEta, len(arrayPt)-1, arrayPt)
+#
+#    for iEta, values in enumerate(effArray):
+#        [histoEff.SetBinContent(iEta+1, iPt+1, weight) for iPt, weight in enumerate(values)]
 
-    ROOT.SetOwnership(histoEff, True)    
-
-
-
-wfile = ROOT.TFile.Open("Weights.root", "UPDATE")
-
-fillFile("Ele17TriggerEff")
-fillFile("Ele8TriggerEff")
-fillFile("ElIDEff")
-
-wfile.Write()
+#wfile.Write()
 wfile.Close()
