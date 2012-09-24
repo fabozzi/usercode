@@ -16,7 +16,7 @@ LineshapeWeight::LineshapeWeight( string inputFile ) :
 
   while( ifs.good() ) {
     // bincenter, original, shape rew, +unc, -unc, shape+interf rew, +unc, -unc
-    ifs >> bincenter >> initial >> pow >> powp >>  powm >> out>> outp >> outm;
+    ifs >> bincenter >> initial >> out>> outp >> outm;
     
     bincenters_.push_back(bincenter);
     if(initial > 0){

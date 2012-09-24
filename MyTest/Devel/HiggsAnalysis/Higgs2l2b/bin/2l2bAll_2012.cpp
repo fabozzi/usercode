@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
   //      signalSel = true;
 
   vdouble bestHiggsMass, bestmjj, bestHiggsMass_1btag, bestHiggsMass_0btag, weight, btagFlag, channel, 
-    puWeight, lrWeight, idWeight, lumiWeight;
+    puWeight, lrWeight, idWeight, lumiWeight, trigWeight;
 
 
   TFile *f = TFile::Open(path, "READ");
@@ -431,6 +431,9 @@ int main(int argc, char **argv) {
   // File with lepton eff weights
   TFile* file_eff = TFile::Open("Weights.root");
   Weights elEff( file_eff , "EleIDEffLoose" );
+  Weights muEff( file_eff , "MuIDEffTight" );
+  Weights elTrig8Eff( file_eff , "Ele8TriggerEff" );
+  Weights elTrig17Eff( file_eff , "Ele17TriggerEff" );
   cout << "LOADING EFFICIENCY TABLES" << endl;
 
   // LOOP on EVENTS
@@ -462,7 +465,7 @@ int main(int argc, char **argv) {
     
     // assign event weight for Lineshape Reweighting
     if(applyLR){
-      LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_W.txt_I.txt");
+      LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape.txt_I.txt");
       BRANCHFLOAT(genHiggsMass);    
       GETENTRY(genHiggsMass,i);    
     // generated higgs mass before Lineshape Reweighting
@@ -557,6 +560,8 @@ int main(int argc, char **argv) {
       double wei2tag_temp(-10);
       double idw2tag(-10), idw1tag(-10), idw0tag(-10);
       double idw2tagSB(-10), idw1tagSB(-10), idw0tagSB(-10);
+      double trw2tag(-10), trw1tag(-10), trw0tag(-10);
+      double trw2tagSB(-10), trw1tagSB(-10), trw0tagSB(-10);
 
       float ResidZllMassBest_(10000.), ResidZllMassBest_Final(10000.);
       float ResidZllMassBest1tag_(10000.);
@@ -639,6 +644,9 @@ int main(int argc, char **argv) {
 	double IDweight_1 = 1.0;
 	double IDweight_2 = 1.0;
 	double IDweight = 1.0;
+	double trigweight_1 = 1.0;
+	double trigweight_2 = 1.0;
+	double trigweight = 1.0;
 
 	// std::cout<<"candidates loop"<<std::endl;
 	  
@@ -754,6 +762,18 @@ int main(int argc, char **argv) {
 	  else isoIDLepCut = (iso1< 0.12) && (iso2 < 0.12) && MuID1 && MuID2 ;
 
 	  //std::cout<<"muon ID performed: "<<lept1PUIso<<std::endl;
+
+	  if(!data) {
+
+	    IDweight_1 = muEff.getEff( fabs(lept1eta_), lept1pt_);
+	    std::cout<< "mu1_pt = " <<  lept1pt_ << " mu1_eta = " <<  lept1eta_ << " --> Mu1 eff wei: "<< IDweight_1 << std::endl;
+	    //IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
+	    IDweight_2 = muEff.getEff( fabs(lept2eta_), lept2pt_);
+	    IDweight = IDweight_1 * IDweight_2;
+	    trigweight = trigweight_1*trigweight_2;
+
+	  }
+
 
 	  zllcharge_ = get(muHiggszllCharge,j);
 	  zllmass_ = get(muHiggszllMass,j);
@@ -939,6 +959,11 @@ int main(int argc, char **argv) {
 	    IDweight_2 = elEff.getEff( fabs(lept2eta_), lept2pt_);
 	    std::cout<< "el2_pt = " <<  lept2pt_ << " el2_eta = " <<  lept2eta_ << " --> El2 eff wei: "<< IDweight_2 << std::endl;
 	    IDweight = IDweight_1 * IDweight_2;
+
+	    trigweight_1 =  elTrig17Eff.getEff( fabs(lept1eta_), lept1pt_);
+	    std::cout<< "el1_pt = " <<  lept1pt_ << " el1_eta = " <<  lept1eta_ << " --> El1 eff wei: "<< trigweight_1 << std::endl;
+	    trigweight_2 =  elTrig8Eff.getEff( fabs(lept2eta_), lept2pt_);
+	    trigweight = trigweight_1*trigweight_2;
 	  }
 
 	  zllcharge_ = get(elHiggszllCharge,j);
@@ -1011,6 +1036,8 @@ int main(int argc, char **argv) {
 	//BTagSFUtil* btsfutil2 = new BTagSFUtil(TMath::Sin(Jet2phi_*1000000));
 	if(!data) {
 	  evtWeight *= IDweight;
+	  evtWeight *= trigweight;
+
 	}
 	cout << "IDweight:" << IDweight << endl;
 	cout<<"WEIGHT: "<< evtWeight <<endl;
@@ -1247,6 +1274,7 @@ int main(int argc, char **argv) {
 		      exist2tag = true;
 		      wei2tag = evtWeight;
 		      idw2tag = IDweight;
+		      trw2tag = trigweight;
 		      ch2tag = ch;
 		      //cout<<"lept channel "<<ch2tag<<endl;
 		      ResidZllMassBest_Final=  ResidZZMass_;
@@ -1284,7 +1312,7 @@ int main(int argc, char **argv) {
 		    exist1tag = true;
 		    wei1tag = evtWeight;
 		    idw1tag = IDweight;
-		      
+		    trw1tag = trigweight;
 		    ch1tag = ch;
 		    ResidZllMassBest1tag_ =  ResidZZMass_;
 		    lljjmass_1btag_ = higgsrefitMass;
@@ -1325,6 +1353,7 @@ int main(int argc, char **argv) {
 		      exist0tag = true;
 		      wei0tag = evtWeight;
 		      idw0tag = IDweight;
+		      trw0tag = trigweight;
 		      ch0tag = ch;
 		      ResidZllMassBest0tag_ =  ResidZZMass_;
 		      lljjmass_0btag_ = higgsrefitMass;
@@ -1418,6 +1447,7 @@ int main(int argc, char **argv) {
 		    exist2tagSB = true;
 		    wei2tagSB = evtWeight;
 		    idw2tagSB = IDweight;
+		    trw2tagSB = trigweight;
 		    ch2tagSB = ch;
 		    ResidZllMassBestSB2tag_ =  ResidZZMass_; 
 		    lljjmassFinal_SB = higgsrefitMass;
@@ -1443,6 +1473,7 @@ int main(int argc, char **argv) {
 		    exist1tagSB = true;
 		    wei1tagSB = evtWeight;
 		    idw1tagSB = IDweight;
+		    trw1tagSB = trigweight;
 		    ch1tagSB = ch;
 		    ResidZllMassBestSB1tag_ =  ResidZZMass_;
 		    lljjmassFinal_SB_1btag_= higgsrefitMass;
@@ -1467,6 +1498,7 @@ int main(int argc, char **argv) {
 		      exist0tagSB = true;
 		      wei0tagSB = evtWeight;
 		      idw0tagSB = IDweight;
+		      trw0tagSB = trigweight;
 		      ch0tagSB = ch;
 		      ResidZllMassBestSB0tag_ =  ResidZZMass_;
 		      lljjmassFinal_SB_0btag_ = higgsrefitMass;
@@ -1500,6 +1532,7 @@ int main(int argc, char **argv) {
 	puWeight.push_back(PUWeight);
 	lrWeight.push_back(LRweight);
 	idWeight.push_back(idw2tag);
+	trigWeight.push_back(trw2tag);
 	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum2Tag_);
 	evtNumber.push_back( EvtNum2Tag_);
@@ -1534,6 +1567,7 @@ int main(int argc, char **argv) {
 	puWeight.push_back(PUWeight);
 	lrWeight.push_back(LRweight);
 	idWeight.push_back(idw1tag);
+	trigWeight.push_back(trw1tag);
 	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum1Tag_);
 	evtNumber.push_back( EvtNum1Tag_);
@@ -1567,6 +1601,7 @@ int main(int argc, char **argv) {
 	puWeight.push_back(PUWeight);
 	lrWeight.push_back(LRweight);
 	idWeight.push_back(idw0tag);
+	trigWeight.push_back(trw0tag);
 	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum0Tag_);
 	evtNumber.push_back( EvtNum0Tag_);
@@ -1601,6 +1636,7 @@ int main(int argc, char **argv) {
       	puWeight.push_back(PUWeight);
       	lrWeight.push_back(LRweight);
       	idWeight.push_back(idw2tagSB);
+	trigWeight.push_back(trw2tagSB);
       	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum2TagSB_);
 	evtNumber.push_back( EvtNum2TagSB_);
@@ -1618,6 +1654,7 @@ int main(int argc, char **argv) {
       	puWeight.push_back(PUWeight);
       	lrWeight.push_back(LRweight);
       	idWeight.push_back(idw1tagSB);
+	trigWeight.push_back(trw1tagSB);
       	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum1TagSB_);
 	evtNumber.push_back( EvtNum1TagSB_);
@@ -1635,6 +1672,7 @@ int main(int argc, char **argv) {
       	puWeight.push_back(PUWeight);
       	lrWeight.push_back(LRweight);
       	idWeight.push_back(idw0tagSB);
+	trigWeight.push_back(trw0tagSB);
       	lumiWeight.push_back(scaleFact);
 	runNumber.push_back( RunNum0TagSB_);
 	evtNumber.push_back( EvtNum0TagSB_);
