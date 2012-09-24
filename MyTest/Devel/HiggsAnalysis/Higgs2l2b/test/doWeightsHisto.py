@@ -15,7 +15,7 @@ ROOT.gROOT.SetBatch()  # don't pop up canvases
 ### Set the values in effArray, it is an array of arrays.
 
 
-names = [ "EleIDEffLoose", "Ele8TriggerEff", "Ele17TriggerEff" ]
+names = [  "MuIDEffTight", "EleIDEffLoose", "Ele8TriggerEff", "Ele17TriggerEff" ]
 
 ### ******* El ID eff: data/MC SF *******
 ### *************************************
@@ -40,6 +40,27 @@ errArray_EleWPLoose = [
                         [0.0784, 0.0344, 0.0098, 0.0047, 0.0036, 0.0062],   # 1.56 < eta < 2.00
                         [0.1184, 0.0378, 0.0119, 0.0021, 0.0052, 0.0082]    # 2.00 < eta < 2.50
                       ]
+
+### ******* Mu ID eff: data/MC SF *******
+### *************************************
+name_MuWPTight = "MuIDEffTight"
+
+arrayEta_MuWPTight  = array.array("f", [0.00, 0.80, 2.10, 2.40]) # Define eta and Pt ranges
+arrayPt_MuWPTight = array.array("f", [20, 40, 100])
+
+#Range di Pt            [20-40, 40-100]         
+effArray_MuWPTight = [
+                        [1.00425, 1.00119],   # 0.00 < eta < 0.80  
+                        [1.00740, 1.00425],   # 0.80 < eta < 2.10 
+                        [1.02159, 1.01404]   # 2.10 < eta < 2.40
+                      ]
+
+errArray_MuWPTight = [
+                        [0.00042, 0.00039],   # 0.00 < eta < 0.80  
+                        [0.00046, 0.00039],   # 0.80 < eta < 2.10 
+                        [0.00142, 0.00141]   # 2.10 < eta < 2.40
+                      ]
+
 
 ### ******* Ele8 trigger eff *******
 ### *******************************
@@ -96,24 +117,28 @@ errArray_EleTrig17 = [
 
 
 arraysEta = {
+    "MuIDEffTight" : arrayEta_MuWPTight,
     "EleIDEffLoose" : arrayEta_EleWPLoose,
     "Ele8TriggerEff" : arrayEta_EleTrig8,
     "Ele17TriggerEff" : arrayEta_EleTrig17,
    }
 
 arraysPt = {
+    "MuIDEffTight" : arrayPt_MuWPTight,
     "EleIDEffLoose" : arrayPt_EleWPLoose,
     "Ele8TriggerEff" : arrayPt_EleTrig8,
     "Ele17TriggerEff" : arrayPt_EleTrig17,
    }
 
 effArrays = {
+    "MuIDEffTight" : effArray_MuWPTight,
     "EleIDEffLoose" : effArray_EleWPLoose,
     "Ele8TriggerEff" : effArray_EleTrig8,
     "Ele17TriggerEff" : effArray_EleTrig17,
    }
 
 errArrays = {
+    "MuIDEffTight" : errArray_MuWPTight,
     "EleIDEffLoose" : errArray_EleWPLoose,
     "Ele8TriggerEff" : errArray_EleTrig8,
     "Ele17TriggerEff" : errArray_EleTrig17,
