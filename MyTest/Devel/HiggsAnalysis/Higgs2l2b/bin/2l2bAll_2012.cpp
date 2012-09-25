@@ -421,7 +421,7 @@ int main(int argc, char **argv) {
   }
 
   // Lineshape reweighting util
-  LineshapeWeight * LRUtil;
+  LineshapeWeight *LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape.txt");
   
   //QGLike discriminator
   string QGFilePDF = "QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root";
@@ -465,7 +465,7 @@ int main(int argc, char **argv) {
     
     // assign event weight for Lineshape Reweighting
     if(applyLR){
-      LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape.txt");
+     
       BRANCHFLOAT(genHiggsMass);    
       GETENTRY(genHiggsMass,i);    
     // generated higgs mass before Lineshape Reweighting
@@ -500,8 +500,8 @@ int main(int argc, char **argv) {
     }      
 
     globWeight = PUWeight;
-    cout << "PUweight:" << PUWeight << endl;
-    cout<<"glob WEIGHT: "<< globWeight <<endl;
+    //cout << "PUweight:" << PUWeight << endl;
+    //cout<<"glob WEIGHT: "<< globWeight <<endl;
 
     // fill histo of numPV (reweighted and not)
     npv.Fill(getInt(numPV),PUWeight);
@@ -519,8 +519,8 @@ int main(int argc, char **argv) {
       globWeight = PUWeight * LRweight;
     }
 
-    cout << "LRweight:" << LRweight << endl;
-    cout<<"glob WEIGHT: "<< globWeight <<endl;
+    //cout << "LRweight:" << LRweight << endl;
+    //cout<<"glob WEIGHT: "<< globWeight <<endl;
 
     // get number of candidates in the event
     if(muChannel) {
@@ -1039,8 +1039,8 @@ int main(int argc, char **argv) {
 	  evtWeight *= trigweight;
 
 	}
-	cout << "IDweight:" << IDweight << endl;
-	cout<<"WEIGHT: "<< evtWeight <<endl;
+	//cout << "IDweight:" << IDweight << endl;
+	//cout<<"WEIGHT: "<< evtWeight <<endl;
 
 
 	if(kineLepCut && fiducialCut && dbLepCut && isoIDLepCut && kineJetCut &&  zchargecut && !unclean) {
@@ -1063,8 +1063,7 @@ int main(int argc, char **argv) {
 	  npv1.Fill(getInt(numPV),evtWeight);
 
 	  // WHAT'S THIS???? Should not be filled at cand level!
-	  njets_ = nj;
-	  if(njets_!=-1) njets.Fill(njets_,evtWeight);
+
 	  //
 
 	  // Z inv. mass selection	  
@@ -1104,7 +1103,9 @@ int main(int argc, char **argv) {
 	      eta_zllmass.Fill(lept1eta_, zllmass_, evtWeight);
 	      eta_phi.Fill( lept1eta_, lept1phi_, evtWeight);
 	      pt_phi.Fill(lept1phi_, lept1pt_, evtWeight);
-  
+
+	      njets_ = nj;
+	      if(njets_!=-1) njets.Fill(njets_,evtWeight);  
 	      beta.Fill(beta_, evtWeight);
 
 	      qgLD.Fill(qgLD_, evtWeight);
@@ -1722,6 +1723,7 @@ int main(int argc, char **argv) {
     double pu_w;
     double lr_w;
     double id_w;
+    double t_w;
     double lumi_w;
     double btagCat;
     double leptChannel;
@@ -1734,6 +1736,7 @@ int main(int argc, char **argv) {
     lljjmassTree.Branch("PUweight", &pu_w, "PUweight/D");
     lljjmassTree.Branch("LRweight", &lr_w, "LRweight/D");
     lljjmassTree.Branch("IDweight", &id_w, "IDweight/D");
+    lljjmassTree.Branch("trigweight", &t_w, "trigweight/D");
     lljjmassTree.Branch("lumiweight", &lumi_w, "lumiweight/D");
     lljjmassTree.Branch("nBTags", &btagCat, "nBTags/D");
     lljjmassTree.Branch("lep", &leptChannel, "lep/D");
@@ -1753,6 +1756,7 @@ int main(int argc, char **argv) {
       pu_w = puWeight[i];
       lr_w = lrWeight[i];
       id_w = idWeight[i];
+      t_w = trigWeight[i];
       lumi_w = lumiWeight[i];
       leptChannel = channel[i];
       runNum = runNumber[i];
