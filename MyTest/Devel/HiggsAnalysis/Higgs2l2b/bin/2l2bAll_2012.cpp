@@ -465,7 +465,7 @@ int main(int argc, char **argv) {
     
     // assign event weight for Lineshape Reweighting
     if(applyLR){
-      LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape.txt_I.txt");
+      LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape.txt");
       BRANCHFLOAT(genHiggsMass);    
       GETENTRY(genHiggsMass,i);    
     // generated higgs mass before Lineshape Reweighting
@@ -766,7 +766,7 @@ int main(int argc, char **argv) {
 	  if(!data) {
 
 	    IDweight_1 = muEff.getEff( fabs(lept1eta_), lept1pt_);
-	    std::cout<< "mu1_pt = " <<  lept1pt_ << " mu1_eta = " <<  lept1eta_ << " --> Mu1 eff wei: "<< IDweight_1 << std::endl;
+	    //std::cout<< "mu1_pt = " <<  lept1pt_ << " mu1_eta = " <<  lept1eta_ << " --> Mu1 eff wei: "<< IDweight_1 << std::endl;
 	    //IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
 	    IDweight_2 = muEff.getEff( fabs(lept2eta_), lept2pt_);
 	    IDweight = IDweight_1 * IDweight_2;
@@ -954,14 +954,14 @@ int main(int argc, char **argv) {
 	  if(!data) {
 	    //IDweight_1 = ElTable.Val(lept1pt_, lept1eta_);
 	    IDweight_1 = elEff.getEff( fabs(lept1eta_), lept1pt_);
-	    std::cout<< "el1_pt = " <<  lept1pt_ << " el1_eta = " <<  lept1eta_ << " --> El1 eff wei: "<< IDweight_1 << std::endl;
+	    //std::cout<< "el1_pt = " <<  lept1pt_ << " el1_eta = " <<  lept1eta_ << " --> El1 eff wei: "<< IDweight_1 << std::endl;
 	    //IDweight_2 = ElTable.Val(lept2pt_, lept2eta_);
 	    IDweight_2 = elEff.getEff( fabs(lept2eta_), lept2pt_);
-	    std::cout<< "el2_pt = " <<  lept2pt_ << " el2_eta = " <<  lept2eta_ << " --> El2 eff wei: "<< IDweight_2 << std::endl;
+	    //std::cout<< "el2_pt = " <<  lept2pt_ << " el2_eta = " <<  lept2eta_ << " --> El2 eff wei: "<< IDweight_2 << std::endl;
 	    IDweight = IDweight_1 * IDweight_2;
 
 	    trigweight_1 =  elTrig17Eff.getEff( fabs(lept1eta_), lept1pt_);
-	    std::cout<< "el1_pt = " <<  lept1pt_ << " el1_eta = " <<  lept1eta_ << " --> El1 eff wei: "<< trigweight_1 << std::endl;
+	    //std::cout<< "el1_pt = " <<  lept1pt_ << " el1_eta = " <<  lept1eta_ << " --> El1 eff wei: "<< trigweight_1 << std::endl;
 	    trigweight_2 =  elTrig8Eff.getEff( fabs(lept2eta_), lept2pt_);
 	    trigweight = trigweight_1*trigweight_2;
 	  }
