@@ -11,6 +11,7 @@ ROOT.gROOT.SetStyle('Plain')
 ROOT.gROOT.SetBatch()
 
 
+### Evaluate the integral between two points
 def integ(histo, lower, upper):
     bmin = histo.GetXaxis().FindBin(lower)
     bmax = histo.GetXaxis().FindBin(lower)
@@ -20,7 +21,7 @@ def integ(histo, lower, upper):
     return integ
 
 
-
+### Evaluate the number of events in a mass window
 def evalNumEvts(histosBkg, histosSig, mass):
     
     low = 0.94*mass
@@ -32,8 +33,9 @@ def evalNumEvts(histosBkg, histosSig, mass):
     print "MASS: ", str(mass)
     print "Event numbers in the mass window: [",str(low),", ",str(up), " ]"
     for (s, num) in nEvts.iteritems():
-        print s, ": ", str(num)  
-
+        print s, ": ", str(num)
+        
+### Evaluate the number of events in a mass window for all mass points
 def evalNumEvtsMassWind(var, ch):
 
     bkgSamples = [ "WW", "WZ", "ZZ", "TT", "DYJetsToLL_M-50"]
@@ -42,11 +44,8 @@ def evalNumEvtsMassWind(var, ch):
 
     ### Take histograms for bkg and signal
     bkg_hist = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in bkgSamples])
-    #[h.Rebin(rebin) for h in bkg_hist.values()]
     [h.Scale(scale[k]) for k, h in bkg_hist.iteritems()]
-    
     sig_hist = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in sigSamples])
-    #[h.Rebin(rebin) for h in sig_hist.values()]
     [h.Scale(scale[k]) for k, h in sig_hist.iteritems()]
     
     ### Evaluate the number of events in the mass windows for signal and bakground
@@ -58,6 +57,7 @@ def evalNumEvtsMassWind(var, ch):
     [evalNumEvts(bkg_hist, sig_hist, m) for m in masses]
     print "*"*40
 
+### Evaluate the number of events in all the mass range
 def evalNumEvtsAllRange(var, ch):
     bkgSamples = [ "WW", "WZ", "ZZ", "TT", "DYJetsToLL_M-50"]
     masses = [200, 210, 250, 275, 300, 325, 350, 400, 600]
@@ -65,11 +65,8 @@ def evalNumEvtsAllRange(var, ch):
 
     ### Take histograms for bkg and signal
     bkg_hist = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in bkgSamples])
-    #[h.Rebin(rebin) for h in bkg_hist.values()]
     [h.Scale(scale[k]) for k, h in bkg_hist.iteritems()]
-    
     sig_hist = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in sigSamples])
-    #[h.Rebin(rebin) for h in sig_hist.values()]
     [h.Scale(scale[k]) for k, h in sig_hist.iteritems()]
     
     ### Evaluate the number of events in the mass windows for signal and bakground
@@ -89,8 +86,20 @@ def evalNumEvtsAllRange(var, ch):
 
 
 
+
+### Call the function evalNumEvtsAllRange to get the number of events in the full range for signal and bkg
+### evalNumEvtsAllRange(category, channel)
+### category = "lljjmass", "lljjmass_1btag" or "lljjmass_0btag"
+### channel = "El" or "Mu"
     
 ch = "El"
 evalNumEvtsAllRange("lljjmass", ch)
 evalNumEvtsAllRange("lljjmass_1btag", ch)
 evalNumEvtsAllRange("lljjmass_0btag", ch)
+
+
+### Call the function evalNumEvtsMassWind to get the number of events in the mass range [-6%, +10%]mH for signal and bkg
+### It evaluates numbers for all the mass points
+### evalNumEvtsMassWind(category, channel)
+### category = "lljjmass", "lljjmass_1btag" or "lljjmass_0btag"
+### channel = "El" or "Mu"
