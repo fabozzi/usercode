@@ -197,7 +197,7 @@ int main(int argc, char **argv) {
   //    if(selType == "sig")
   //      signalSel = true;
 
-  vdouble bestHiggsMass, bestmjj, bestHiggsMass_1btag, bestHiggsMass_0btag, weight, btagFlag, channel, 
+  vdouble bestHiggsMass, bestmjj, genHMass, bestHiggsMassNoRefit, bestHiggsMass_1btag, bestHiggsMass_0btag, weight, btagFlag, channel, 
     puWeight, lrWeight, idWeight, lumiWeight, trigWeight;
 
 
@@ -421,7 +421,7 @@ int main(int argc, char **argv) {
   }
 
   // Lineshape reweighting util
-  LineshapeWeight *LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape.txt");
+  LineshapeWeight *LRUtil = new LineshapeWeight("../../../MMozer/powhegweight/data/mZZ_Higgs"+hmasshyp+"_8TeV_Lineshape+Interference.txt");
   
   //QGLike discriminator
   string QGFilePDF = "QG_QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2.root";
@@ -464,10 +464,10 @@ int main(int argc, char **argv) {
     double LRweightErrm(0.0);
     
     // assign event weight for Lineshape Reweighting
+    BRANCHFLOAT(genHiggsMass);    
+    GETENTRY(genHiggsMass,i);    
     if(applyLR){
      
-      BRANCHFLOAT(genHiggsMass);    
-      GETENTRY(genHiggsMass,i);    
     // generated higgs mass before Lineshape Reweighting
       genhmass.Fill(getInt(genHiggsMass));
       LRUtil->getWeight( getInt(genHiggsMass), LRweight, LRweightErrp, LRweightErrm);
@@ -592,7 +592,7 @@ int main(int argc, char **argv) {
 
       float SumPtBest_SB(0), SumPtBest_FinalSB(0), SumPtBest_FinalSB_1btag(0);
       float lljjmass_SB(0), lljjmass_noRefit_SB(0);
-      float lljjmassFinal_SB(0), lljjmassFinal_noRefit_SB(0), lljjmassFinal_SB_1btag_(0), lljjmassFinal_noRefit_SB_1btag_(0), lljjmassFinal_SB_0btag_(0);
+      float lljjmassFinal_SB(0), lljjmassFinal_noRefit_SB(0), lljjmassFinal_SB_1btag_(0), lljjmassFinal_noRefit_SB_1btag_(0), lljjmassFinal_SB_0btag_(0), lljjmassFinal_noRefit_SB_0btag_(0);
 
 
       // auxiliary variables for channel-independent selection
@@ -1478,6 +1478,7 @@ int main(int argc, char **argv) {
 		    ch1tagSB = ch;
 		    ResidZllMassBestSB1tag_ =  ResidZZMass_;
 		    lljjmassFinal_SB_1btag_= higgsrefitMass;
+		    lljjmassFinal_noRefit_SB_1btag_ = higgsMass;
 		    zjjmass_SB1btag_ = zjjmass_;
 		    EvtNum1TagSB_=higgsEvtNum;
 		    RunNum1TagSB_=higgsRunNum;
@@ -1503,6 +1504,7 @@ int main(int argc, char **argv) {
 		      ch0tagSB = ch;
 		      ResidZllMassBestSB0tag_ =  ResidZZMass_;
 		      lljjmassFinal_SB_0btag_ = higgsrefitMass;
+		      lljjmassFinal_noRefit_SB_0btag_ = higgsMass;
 		      zjjmass_SB0btag_ = zjjmass_;
 		      EvtNum0TagSB_=higgsEvtNum;
 		      RunNum0TagSB_=higgsRunNum;
@@ -1524,7 +1526,10 @@ int main(int argc, char **argv) {
       if((lljjmass_!=0) && exist2tag) { 
 	lljjmass.Fill(lljjmass_, wei2tag);
 	// store the best cand mass
+	//	cout<<"mH: mZZ: mZZRefit "<< getInt(genHiggsMass)<<" "<<lljjmass_<<" "<<lljjmass_noRefit_;
 	bestHiggsMass.push_back(lljjmass_);
+	bestHiggsMassNoRefit.push_back( lljjmass_noRefit_);
+	genHMass.push_back(getInt(genHiggsMass));
 	bestmjj.push_back(zjjmass_2btag_);
 	btagFlag.push_back(2.);
 	if(muChannel) channel.push_back(1.);
@@ -1559,6 +1564,8 @@ int main(int argc, char **argv) {
 	lljjmass_1btag.Fill(lljjmass_1btag_, wei1tag);
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_1btag_);
+	bestHiggsMassNoRefit.push_back( lljjmass_noRefit_1btag_);
+	genHMass.push_back(getInt(genHiggsMass));
 	bestmjj.push_back(zjjmass_1btag_);
 	btagFlag.push_back(1.);
 	if(muChannel) channel.push_back(1.);
@@ -1594,6 +1601,8 @@ int main(int argc, char **argv) {
 	lljjmass_0btag.Fill(lljjmass_0btag_, wei0tag);
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_0btag_);
+	bestHiggsMassNoRefit.push_back( lljjmass_noRefit_0btag_);
+	genHMass.push_back(getInt(genHiggsMass));
 	bestmjj.push_back(zjjmass_0btag_);
 	btagFlag.push_back(0.);
 	if(muChannel) channel.push_back(1.);
@@ -1628,6 +1637,8 @@ int main(int argc, char **argv) {
       if((lljjmassFinal_SB!=0) && !exist2tag && !exist1tag && !exist0tag &&  exist2tagSB) {
       	lljjmass_2btagSB.Fill(lljjmassFinal_SB, wei2tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB);
+	bestHiggsMassNoRefit.push_back( lljjmassFinal_noRefit_SB);
+	genHMass.push_back(getInt(genHiggsMass));
       	bestmjj.push_back(zjjmass_SB2btag_);
       	btagFlag.push_back(2.);
 	if(muChannel) channel.push_back(1.);
@@ -1646,6 +1657,8 @@ int main(int argc, char **argv) {
       if((lljjmassFinal_SB_1btag_!=0) && !exist2tag && !exist1tag && !exist0tag &&  !exist2tagSB && exist1tagSB) {
       	lljjmass_1btagSB.Fill(lljjmassFinal_SB_1btag_, wei1tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB_1btag_);
+	bestHiggsMassNoRefit.push_back( lljjmassFinal_noRefit_SB_1btag_);
+	genHMass.push_back(getInt(genHiggsMass));
       	bestmjj.push_back(zjjmass_SB1btag_);
       	btagFlag.push_back(1.);
 	if(muChannel) channel.push_back(1.);
@@ -1664,6 +1677,8 @@ int main(int argc, char **argv) {
       if((lljjmassFinal_SB_0btag_!=0) && !exist2tag && !exist1tag && !exist0tag &&  !exist2tagSB && !exist1tagSB && exist0tagSB) {
       	lljjmass_0btagSB.Fill(lljjmassFinal_SB_0btag_, wei0tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB_0btag_);
+	bestHiggsMassNoRefit.push_back( lljjmassFinal_noRefit_SB_0btag_);
+	genHMass.push_back(getInt(genHiggsMass));
       	bestmjj.push_back(zjjmass_SB0btag_);
       	btagFlag.push_back(0.);
 	if(muChannel) channel.push_back(1.);
@@ -1718,6 +1733,8 @@ int main(int argc, char **argv) {
     TTree lljjmassTree("lljjmassTree","lljjmass tree");
     // mzz branch for the output tree
     double mzz;
+    double mH;
+    double mzzNoRefit;
     double mjj;
     double w;
     double pu_w;
@@ -1731,6 +1748,8 @@ int main(int argc, char **argv) {
     double evtNum;
     double lumiB;
     lljjmassTree.Branch("mZZ", &mzz, "mZZ/D");
+    lljjmassTree.Branch("mZZNoRefit", &mzzNoRefit, "mZZNoRefit/D");
+    lljjmassTree.Branch("mH", &mH, "mH/D");
     lljjmassTree.Branch("mJJ", &mjj, "mJJ/D");
     lljjmassTree.Branch("weight", &w, "weight/D");
     lljjmassTree.Branch("PUweight", &pu_w, "PUweight/D");
@@ -1750,6 +1769,8 @@ int main(int argc, char **argv) {
     for(size_t i = 0; i<bestHiggsMass.size(); ++i){
 
       mzz = bestHiggsMass[i];
+      mzzNoRefit = bestHiggsMassNoRefit[i];
+      mH = genHMass[i];
       mjj = bestmjj[i];
       btagCat = btagFlag[i];
       w = weight[i];
