@@ -4,22 +4,22 @@ import ROOT
 #data = False
 data = True
 run = 'AB'
-#ch = "El"
-ch = 'Mu'
+ch = "El"
+#ch = 'Mu'
 
 
 #ch = 'El'
 #ch = 'All'
 
-normalizeToData = False
-#normalizeToData = True
+#normalizeToData = False
+normalizeToData = True
 
 
 
-folder = "29Aug_5fb"+ch+"Channel/"
+folder = "26Sept_5fb"+ch+"Channel/"
 
 
-samples = [ "ZZ", "TT", "DYJetsToLL_M-50"]
+samples = [ "WW", "WZ", "ZZ", "TT", "DYJetsToLL_M-50"]
 #samples = [ "WW", "WZ",  'T-tW', 'Tbar-tW',"ZZ", "TT", "DYJets"]
 
 
@@ -80,16 +80,16 @@ if (ch == 'All'):Vars["lepteta2"] = (1,-3.,3., False, '#eta (sub-leading lepton)
 ## Vars["phiStarRefit"] = (10,0.,0.,True)
 ## Vars["HelyLDRefit"] = (10,0.,0.,True)
 
-Vars["cosTheta1Refit"] = (10,0.,0.,False, 'cos#Theta_{1}')
-Vars["cosTheta1StarRefit"] = (10,0.,0.,False, 'cos#Theta_{1}^{*}')
-Vars["cosTheta2Refit"] = (10,0.,0.,False, 'cos#Theta_{2}')
-Vars["phiRefit"] = (10,0.,0.,False, '#Phi')
-Vars["phiStarRefit"] = (10,0.,0.,False, '#Phi^{*}')
-Vars["HelyLDRefit"] = (10,0.,0.,False, 'Helicity LD')
+Vars["cosTheta1Refit"] = (5,0.,0.,False, 'cos#Theta_{1}')
+Vars["cosTheta1StarRefit"] = (5,0.,0.,False, 'cos#Theta_{1}^{*}')
+Vars["cosTheta2Refit"] = (5,0.,0.,False, 'cos#Theta_{2}')
+Vars["phiRefit"] = (5,0.,0.,False, '#Phi')
+Vars["phiStarRefit"] = (5,0.,0.,False, '#Phi^{*}')
+Vars["HelyLDRefit"] = (5,0.,0.,False, 'Helicity LD')
 
 Vars["TCHEJet"] = (1,0.,0., True, 'TCHE')
 Vars["CSVJet"] = (1,0.,0., True, 'CSV')
-Vars["JPJet"] = (1,0.,0., True, 'JP')
+Vars["JPJet"] = (2,0.,0., True, 'JP')
 Vars["metSignif"] = (2,0.,0.,True, 'MET Significance')
 
 if (ch == 'Mu'):Vars["npv"] = (1,0.,0.,False,'# of primary vertexes - #mu channel')
@@ -100,7 +100,7 @@ Vars["npv1"] = (1,0.,0.,False, '# of primary vertexes')
 if (ch == 'Mu'):Vars["npv_woReweight"] = (1,0.,0.,False, '# of primary vertexes (without reweighting) - #mu channel')
 if (ch == 'El'):Vars["npv_woReweight"] = (1,0.,0.,False, '# of primary vertexes (without reweighting) - e channel')
 
-Vars["njets"] = (1,0.,0.,True,'# of jets')
+#Vars["njets"] = (1,0.,0.,True,'# of jets')
 
 #Vars["leptphi1"] = (2,0.,0.,True)
 #Vars["qgd"] = (2,0.,0.,True)
@@ -113,7 +113,8 @@ Vars["lljjmass_2btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 2btag")
 
 Vars["lljjmass_sb_all"]=(10, 0., 0., True, "m{lljj} sidebands - allCategories")
 
-Vars["beta"] = (10,0.,0.,True, '#beta')
+#Vars["beta"] = (10,0.,0.,True, '#beta')
+Vars["beta"] = (10,0.,0.,False, '#beta')
 
 #Vars["jjm_0btag"] = (2,0.,0.,True, final)
 #Vars["jjm_1btag"] = (2,0.,0.,False, final)

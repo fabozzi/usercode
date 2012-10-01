@@ -39,7 +39,7 @@ for mh in masses:
     leg.AddEntry(hmassRew, "WITH LR", "l")
     leg.Draw("SAME")
 
-    c1.Print("LR_"+mh+".png")
-    c1.Print("LR_"+mh+".eps")
+    c1.Print("LR_"+mh+"27Sept.png")
+    c1.Print("LR_"+mh+"27Sept.eps")
     
     

@@ -6,8 +6,10 @@ import ROOT
 
 #colors = [ ROOT.kOrange -2, ROOT.kOrange +1, ROOT.kBlue +1, ROOT.kBlue +2,  ROOT.kTeal -5 , ROOT.kMagenta +3,ROOT.kPink -8,  ROOT.kRed , ROOT.kGreen +1, ROOT.kBlue +2, ROOT.kBlue +1, ROOT.kBlue -4, ROOT.kGreen ]
 
-colors = [ ROOT.kBlue +1, ROOT.kBlue +2,  ROOT.kOrange +1 ,  ROOT.kTeal -5 ,ROOT.kOrange -2, ROOT.kMagenta +3,ROOT.kPink -8,  ROOT.kRed , ROOT.kGreen +1, ROOT.kBlue +2, ROOT.kBlue +1, ROOT.kBlue -4, ROOT.kGreen ]
+colors = [ ROOT.kAzure -4, ROOT.kAzure -5, ROOT.kAzure -6,  ROOT.kPink +3, ROOT.kOrange -4, ROOT.kTeal -6,ROOT.kPink -8,  ROOT.kRed , ROOT.kGreen +1, ROOT.kBlue +2, ROOT.kBlue +1, ROOT.kBlue -4, ROOT.kGreen ]
 
+
+#colors = [ROOT.kTeal +3, ROOT.kTeal +4,  ROOT.kTeal +5, ROOT.kOrange +1, ROOT.kAzure -3 ]
 #colors = [ ROOT.kOrange +1, ROOT.kTeal -5, ROOT.kTeal -5, ROOT.kBlue +1, ROOT.kBlue +2,  ROOT.kOrange +1 , ROOT.kMagenta +3,ROOT.kPink -8,  ROOT.kRed , ROOT.kGreen +1, ROOT.kBlue +2, ROOT.kBlue +1, ROOT.kBlue -4, ROOT.kGreen ]
 
 #colors = [ ROOT.kTeal -5, ROOT.kOrange +1, ROOT.kTeal -5, ROOT.kBlue +1, ROOT.kBlue +2,  ROOT.kOrange +1 , ROOT.kMagenta +3,ROOT.kPink -8,  ROOT.kRed , ROOT.kGreen +1, ROOT.kBlue +2, ROOT.kBlue +1, ROOT.kBlue -4, ROOT.kGreen ]

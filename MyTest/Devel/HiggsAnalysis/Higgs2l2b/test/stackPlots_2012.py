@@ -29,6 +29,8 @@ os.system(cmd)
 
 
 
+
+
 def makePlot(varKey):
 
     norm = 0
@@ -60,6 +62,8 @@ def makePlot(varKey):
         [h.Scale(scale[k]) for k, h in all_hist_2.iteritems()]
         [h.Add(h2) for h,h2 in zip(all_hist.itervalues(), all_hist_2.itervalues()) ]
 
+    ### Evaluate number of events after the selection
+    
 
     if data:
         if( run=='A'): dataRun2012 = ROOT.TFile.Open("NoNorm_"+ch+"/"+ch+"Run2012AEdmNtp.root"if ch !="All" else "NoNorm_El/ElRun2012AEdmNtp.root").Get(var)
@@ -115,7 +119,7 @@ def makePlot(varKey):
 
     lim_max = maximum*1.03
 
-    if(var.startswith("cos") or var.startswith("phi")  or  var.startswith("lepteta")):lim_max = maximum*1.3
+    if(var.startswith("cos") or var.startswith("phi")  or  var.startswith("lepteta") or var.startswith("npv")):lim_max = maximum*1.4
     #if(logScale): lim_max = maximum*100
     if(logScale): lim_max = maximum*10
     
@@ -163,6 +167,7 @@ def makePlot(varKey):
     hs.Draw()    
     if(xmin!=xmax): hs.GetXaxis().SetRangeUser(xmin, xmax)
     if data :
+        dataRun2012.SetMarkerStyle(22)
         dataRun2012.Draw("SAME")
         print "Events in data sample", dataRun2012.Integral()
         if(run == 'A'): leg.AddEntry(dataRun2012, (ch+"Run2012A"), "l")

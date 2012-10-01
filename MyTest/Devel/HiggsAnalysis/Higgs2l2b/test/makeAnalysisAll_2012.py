@@ -18,7 +18,8 @@ channels = ['Mu', 'El']
 
 runPeriod = "2012All"
 
-ntupleFolder = "edmntp12Jul12Cleaned"
+ntupleFolder = "edmntpTest"
+#ntupleFolder = "edmntp12Jul12Cleaned"
 
 signalMap = {
    'GluGluToHToZZTo2L2Q_M-200_8TeV': 200,
@@ -39,9 +40,12 @@ signalMap = {
 #ntupleFolder2 = "edmntpTest"
 #dirname = ['GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-200_8TeV','GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV','GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
 
-dirname = [  'GluGluToHToZZTo2L2Q_M-400_8TeV']
-
+#dirname = [  'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV']
+dirname = ['GluGluToHToZZTo2L2Q_M-400_8TeV']
 #dirname = [  'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-400_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV', 'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV', 'GluGluToHToZZTo2L2Q_M-425_8TeV']
+
+#dirname = [ 'GluGluToHToZZTo2L2Q_M-400_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV' , 'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV', 'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV']
+
 #dirname = [ 'DYJetsToLL_M-50']
 #dirname = [  'MuRun2012A', 'MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext', 'ElRun2012B', 'ElRun2012B_Ext','ElRun2012A', 'ElRun2012A_23May2012']
 #dirname = ['MuRun2012B_Ext']

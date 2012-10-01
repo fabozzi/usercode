@@ -10,14 +10,14 @@ import string
 
 inputpath = '/afs/cern.ch/work/d/decosa/private/Higgs/Summer12/'
 #outpath = '/data3/scratch/users/decosa/Higgs/TestSummer12/'
-ntpdir = '/edmntp22Jul12Cleaned/'
+ntpdir = '/edmntp12Jul12Cleaned/'
 
 
 #inputpath = '/data3/scratch/users/fabozzi/Higgs/Summer12/'
 #ntpdir = '/edmntp26Jun12/'
-
-outputpath =  '/tmp/decosa/Higgs/Summer12/'
-ntpdirout = '/edmntp27Jul12Cleaned/'
+outpath = '/afs/cern.ch/work/d/decosa/private/Higgs/Summer12/'
+#outputpath =  '/tmp/decosa/Higgs/Summer12/'
+ntpdirout = '/edmntp12Jul12Cleaned/'
 
 #ntpdir = '/edmntpTest/'
 #ntpdirout = '/edmntpCleanedTest/'
