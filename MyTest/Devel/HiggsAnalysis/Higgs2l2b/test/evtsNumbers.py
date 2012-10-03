@@ -37,7 +37,9 @@ def evalNumEvts(histosBkg, histosSig, mass):
     nEvts_err[signal] = ROOT.TMath.Sqrt(integ(histosSig[signal], low, up))
     nEvts["Background"] = nEvts["DYJetsToLL_M-50"] + nEvts["TT"]+ nEvts["ZZ"] + nEvts["WZ"] + nEvts["WW"]
     nEvts_err["Background"] = ROOT.TMath.Sqrt(nEvts["DYJetsToLL_M-50"] + nEvts["TT"]+ nEvts["ZZ"] + nEvts["WZ"] + nEvts["WW"])
-    nEvts_plus_err =  dict([(s, str.format("{0:.2f}", nEvts[s]) +"$\pm$"+ str.format("{0:.3f}", nEvts_err[s])  ) for s in nEvts.iterkeys() ])
+    nEvts["ZZ/WZ/WW"] = nEvts["ZZ"] + nEvts["WZ"] + nEvts["WW"]
+    nEvts_err["ZZ/WZ/WW"] = ROOT.TMath.Sqrt( nEvts["ZZ"] + nEvts["WZ"] + nEvts["WW"])
+    nEvts_plus_err =  dict([(s, str.format("{0:.2f}", nEvts[s]) +"$\pm$"+ str.format("{0:.2f}", nEvts_err[s])  ) for s in nEvts.iterkeys() ])
     return nEvts_plus_err
     #print nEvts
     #print "MASS: ", str(mass)
@@ -73,7 +75,7 @@ def evalNumEvtsAllRange(var, ch):
         nEvts[s]=h.Integral()
         nEvts_err[s]=ROOT.TMath.Sqrt(h.Integral())
 
-    nEvts_plus_err =  dict([(s, str.format("{0:.2f}", nEvts[s]) +"$\pm$"+ str.format("{0:.3f}", nEvts_err[s])  ) for s in nEvts.iterkeys() ])
+    nEvts_plus_err =  dict([(s, str.format("{0:.2f}", nEvts[s]) +"$\pm$"+ str.format("{0:.2f}", nEvts_err[s])  ) for s in nEvts.iterkeys() ])
     ## print "Event numbers"
     ## for (s, num) in nEvts.iteritems():
     ##     print s, ": ", str(num)
@@ -116,16 +118,16 @@ def tableEvtsMassWind(var, ch):
         print signal
         nEvts = evalNumEvts(bkg_hist, sig_hist, m)
         print nEvts
-        numbers.append([m,
+        numbers.append([
                         nEvts[signal],
                         nEvts["DYJetsToLL_M-50"],
                         nEvts["TT"],
-                        nEvts["ZZ"] + nEvts["WZ"] + nEvts["WW"],
+                        nEvts["ZZ/WZ/WW"],
                         nEvts["Background"]
                         ])
 
 
-        t = matrix2latex(numbers, var+"_"+ch+"_evts", headerColumn=hc, headerRow=hr, format='%.2f', alignment = '|c|c|c|',caption='Expected yields of signal and background with  1~fb$^{-1}$ based on simulation in the '+cat+' category. The numbers show  '+channel+' expectations. Tighter $mZZ$ mass requirements are applied as  (-6\%, +\0\%) of the mass hypothesis.')
+        t = matrix2latex(numbers, var+"_"+ch+"_evts", headerColumn=hc, headerRow=hr, format='%.2f', alignment = '|c|c|c|c|c|',caption='Expected yields of signal and background with  1~fb$^{-1}$ based on simulation in the '+cat+' category. The numbers show  '+channel+' expectations. Tighter $mZZ$ mass requirements are applied as  (-6\%, +\0\%) of the mass hypothesis.')
 
 
 def tableEvtsAllRange(ch):
