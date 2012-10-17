@@ -27,9 +27,9 @@ for k, v in scale.iteritems():
 cmd = "mkdir "+folder
 os.system(cmd)
 
+sigSamples = ["GluGluToHToZZTo2L2Q_M-350_8TeV"]
 
-
-
+drawSignal= True
 
 def makePlot(varKey):
 
@@ -56,6 +56,10 @@ def makePlot(varKey):
     [h.Rebin(rebin) for h in all_hist.values()]
     [h.Scale(scale[k]) for k, h in all_hist.iteritems()]
 
+    sig_samples = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in sigSamples])
+    [h.Rebin(rebin) for h in sig_samples.values()]
+    [h.Scale(scale[k]) for k, h in sig_samples.iteritems()]
+    
     if (ch == 'All'):
         all_hist_2 = dict([ (s, ROOT.TFile.Open("NoNorm_Mu/" + s+"EdmNtp.root").Get(var)) for s in samples ])
         [h.Rebin(rebin) for h in all_hist_2.values()]
@@ -143,8 +147,7 @@ def makePlot(varKey):
         hs.Add(hist,'hist')
         leg.AddEntry(hist, s, "f")
 
-
-
+    
 #    backgrounds = samples[:]
 #    backgrounds.remove("ZZ")
 #    print "Backgrounds: ", backgrounds
@@ -174,7 +177,19 @@ def makePlot(varKey):
         if(run == 'B'): leg.AddEntry(dataRun2012, (ch+"Run2012B"), "l")
         if (run == 'AB'): leg.AddEntry(dataRun2012, (ch+"Run2012AB"), "l")
 
+
+    if(drawSignal):
+        hsig =  sig_samples["GluGluToHToZZTo2L2Q_M-350_8TeV"]
+        hsig.SetLineColor(ROOT.kPink+3)
+        hsig.SetLineWidth(2)
+        scaleFact = 1000
+        hsig.Scale(scaleFact)
+        hsig.Draw("HISTSAME")
+        leg.AddEntry(hsig, "H350 (x"+str(scaleFact)+")", "l")
+        
+
     leg.Draw("SAME")
+    
     if(logScale): c1.SetLogy()
     name = folder + var+"_"+ch
     #if(logScale): name = folder + var+"_"+ch +"_LOG_"

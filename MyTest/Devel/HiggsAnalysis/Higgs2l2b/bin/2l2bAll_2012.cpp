@@ -198,7 +198,7 @@ int main(int argc, char **argv) {
   //      signalSel = true;
 
   vdouble bestHiggsMass, bestmjj, genHMass, bestHiggsMassNoRefit, bestHiggsMass_1btag, bestHiggsMass_0btag, weight, btagFlag, channel, 
-    puWeight, lrWeight, idWeight, lumiWeight, trigWeight;
+    puWeight, lrWeight, lrWeightErrp, lrWeightErrm, idWeight, lumiWeight, trigWeight;
 
 
   TFile *f = TFile::Open(path, "READ");
@@ -341,9 +341,17 @@ int main(int argc, char **argv) {
   TH1F lljjmass_0btag("lljjmass_0btag", "m(lljj)", 1000, 0, 1000);
   TH1F lljjmass_1btag("lljjmass_1btag", "m(lljj)", 1000, 0, 1000);
 
+  //lljjmass.Sumw2();
+  //lljjmass_1btag.Sumw2();
+  //lljjmass_0btag.Sumw2();
+
   TH1F lljjmass_2btagSB("lljjmass_2btagSB", "m(lljj)", 1000, 0, 1000);
   TH1F lljjmass_0btagSB("lljjmass_0btagSB", "m(lljj)", 1000, 0, 1000);
   TH1F lljjmass_1btagSB("lljjmass_1btagSB", "m(lljj)", 1000, 0, 1000);
+
+  //lljjmass_2btagSB.Sumw2();
+  //lljjmass_1btagSB.Sumw2();
+  //lljjmass_0btagSB.Sumw2();
 
   TH1F lljjmass_noRefit("lljjmassNoRefit", "m(lljj)", 1000, 0, 1000);
   TH1F lljjmass_noRefit_1btag("lljjmassNoRefit_1btag", "m(lljj)", 1000, 0, 1000);
@@ -442,7 +450,8 @@ int main(int argc, char **argv) {
   vint runNumSkim;
 
   for(unsigned int i = 0; i <nEvents; ++i) {
-   
+    //cout<<"starting loop on events"<<endl;
+
     //    if(i%100 == 0) progress(double(i)/double(nEvents));
     ++count[0];
     // NUMBER OF CANDIDATES IN THE EVENT
@@ -460,26 +469,31 @@ int main(int argc, char **argv) {
     //    double evtWeight = 1.0;
     double PUWeight = 1.0;
     double LRweight(1.0);
-    double LRweightErrp(0.0);
-    double LRweightErrm(0.0);
+    double LRweightErrp(1.0);
+    double LRweightErrm(1.0);
     
     // assign event weight for Lineshape Reweighting
-    BRANCHFLOAT(genHiggsMass);    
-    GETENTRY(genHiggsMass,i);    
+    
+    double genMass = 0.;
     if(applyLR){
-     
+      BRANCHFLOAT(genHiggsMass);    
+      GETENTRY(genHiggsMass,i);    
+      genMass = getInt(genHiggsMass);
+
+
     // generated higgs mass before Lineshape Reweighting
-      genhmass.Fill(getInt(genHiggsMass));
-      LRUtil->getWeight( getInt(genHiggsMass), LRweight, LRweightErrp, LRweightErrm);
-      //      cout << "Hmass = " << getInt(genHiggsMass) << " LRweight = " << LRweight << endl;
+      genhmass.Fill(genMass);
+      LRUtil->getWeight(genMass , LRweight, LRweightErrp, LRweightErrm);
+      //      cout << "Hmass = " << genMass << " LRweight = " << LRweight << endl;
       // generated higgs mass after Lineshape Reweighting
-      genhmass_rew.Fill(getInt(genHiggsMass), LRweight);
+      genhmass_rew.Fill(genMass, LRweight);
       LR_weights.Fill(LRweight);
-      LR_weights_mass.Fill(getInt(genHiggsMass), LRweight);
+      LR_weights_mass.Fill(genMass, LRweight);
     }
 
     // get PU weight
     if(!data){
+      //cout<<"starting if"<<endl;
       //      BRANCHFLOAT(nGenInt);
       //      GETENTRY(nGenInt,i);
       BRANCHINT(nGenIntBXm1);
@@ -497,6 +511,7 @@ int main(int argc, char **argv) {
 	PUWeight = LumiWeights_.weight(getInt(trueNInt));
       }
       else PUWeight = Lumi3DWeights_.weight3D( getInt(nGenIntBXm1), getInt(nGenIntBX0), getInt(nGenIntBXp1) );
+      //cout<<"ending if"<<endl;
     }      
 
     globWeight = PUWeight;
@@ -1105,7 +1120,7 @@ int main(int argc, char **argv) {
 	      pt_phi.Fill(lept1phi_, lept1pt_, evtWeight);
 
 	      njets_ = nj;
-	      if(njets_!=-1) njets.Fill(njets_,evtWeight);  
+	     
 	      beta.Fill(beta_, evtWeight);
 
 	      qgLD.Fill(qgLD_, evtWeight);
@@ -1526,10 +1541,10 @@ int main(int argc, char **argv) {
       if((lljjmass_!=0) && exist2tag) { 
 	lljjmass.Fill(lljjmass_, wei2tag);
 	// store the best cand mass
-	//	cout<<"mH: mZZ: mZZRefit "<< getInt(genHiggsMass)<<" "<<lljjmass_<<" "<<lljjmass_noRefit_;
+	//	cout<<"mH: mZZ: mZZRefit "<< genMass<<" "<<lljjmass_<<" "<<lljjmass_noRefit_;
 	bestHiggsMass.push_back(lljjmass_);
 	bestHiggsMassNoRefit.push_back( lljjmass_noRefit_);
-	genHMass.push_back(getInt(genHiggsMass));
+	genHMass.push_back(genMass);
 	bestmjj.push_back(zjjmass_2btag_);
 	btagFlag.push_back(2.);
 	if(muChannel) channel.push_back(1.);
@@ -1537,6 +1552,8 @@ int main(int argc, char **argv) {
 	weight.push_back(wei2tag*scaleFact);
 	puWeight.push_back(PUWeight);
 	lrWeight.push_back(LRweight);
+	lrWeightErrp.push_back(LRweightErrp);
+	lrWeightErrm.push_back(LRweightErrm);
 	idWeight.push_back(idw2tag);
 	trigWeight.push_back(trw2tag);
 	lumiWeight.push_back(scaleFact);
@@ -1565,7 +1582,7 @@ int main(int argc, char **argv) {
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_1btag_);
 	bestHiggsMassNoRefit.push_back( lljjmass_noRefit_1btag_);
-	genHMass.push_back(getInt(genHiggsMass));
+	genHMass.push_back(genMass);
 	bestmjj.push_back(zjjmass_1btag_);
 	btagFlag.push_back(1.);
 	if(muChannel) channel.push_back(1.);
@@ -1574,6 +1591,8 @@ int main(int argc, char **argv) {
 	weight.push_back(wei1tag*scaleFact);
 	puWeight.push_back(PUWeight);
 	lrWeight.push_back(LRweight);
+	lrWeightErrp.push_back(LRweightErrp);
+	lrWeightErrm.push_back(LRweightErrm);
 	idWeight.push_back(idw1tag);
 	trigWeight.push_back(trw1tag);
 	lumiWeight.push_back(scaleFact);
@@ -1602,7 +1621,7 @@ int main(int argc, char **argv) {
 	// store the best cand mass
 	bestHiggsMass.push_back(lljjmass_0btag_);
 	bestHiggsMassNoRefit.push_back( lljjmass_noRefit_0btag_);
-	genHMass.push_back(getInt(genHiggsMass));
+	genHMass.push_back(genMass);
 	bestmjj.push_back(zjjmass_0btag_);
 	btagFlag.push_back(0.);
 	if(muChannel) channel.push_back(1.);
@@ -1610,6 +1629,8 @@ int main(int argc, char **argv) {
 	weight.push_back(wei0tag*scaleFact);
 	puWeight.push_back(PUWeight);
 	lrWeight.push_back(LRweight);
+	lrWeightErrp.push_back(LRweightErrp);
+	lrWeightErrm.push_back(LRweightErrm);
 	idWeight.push_back(idw0tag);
 	trigWeight.push_back(trw0tag);
 	lumiWeight.push_back(scaleFact);
@@ -1638,7 +1659,7 @@ int main(int argc, char **argv) {
       	lljjmass_2btagSB.Fill(lljjmassFinal_SB, wei2tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB);
 	bestHiggsMassNoRefit.push_back( lljjmassFinal_noRefit_SB);
-	genHMass.push_back(getInt(genHiggsMass));
+	genHMass.push_back(genMass);
       	bestmjj.push_back(zjjmass_SB2btag_);
       	btagFlag.push_back(2.);
 	if(muChannel) channel.push_back(1.);
@@ -1647,6 +1668,8 @@ int main(int argc, char **argv) {
       	weight.push_back(wei2tagSB*scaleFact);
       	puWeight.push_back(PUWeight);
       	lrWeight.push_back(LRweight);
+	lrWeightErrp.push_back(LRweightErrp);
+	lrWeightErrm.push_back(LRweightErrm);
       	idWeight.push_back(idw2tagSB);
 	trigWeight.push_back(trw2tagSB);
       	lumiWeight.push_back(scaleFact);
@@ -1658,7 +1681,7 @@ int main(int argc, char **argv) {
       	lljjmass_1btagSB.Fill(lljjmassFinal_SB_1btag_, wei1tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB_1btag_);
 	bestHiggsMassNoRefit.push_back( lljjmassFinal_noRefit_SB_1btag_);
-	genHMass.push_back(getInt(genHiggsMass));
+	genHMass.push_back(genMass);
       	bestmjj.push_back(zjjmass_SB1btag_);
       	btagFlag.push_back(1.);
 	if(muChannel) channel.push_back(1.);
@@ -1667,6 +1690,8 @@ int main(int argc, char **argv) {
       	weight.push_back(wei1tagSB*scaleFact);
       	puWeight.push_back(PUWeight);
       	lrWeight.push_back(LRweight);
+	lrWeightErrp.push_back(LRweightErrp);
+	lrWeightErrm.push_back(LRweightErrm);
       	idWeight.push_back(idw1tagSB);
 	trigWeight.push_back(trw1tagSB);
       	lumiWeight.push_back(scaleFact);
@@ -1678,7 +1703,7 @@ int main(int argc, char **argv) {
       	lljjmass_0btagSB.Fill(lljjmassFinal_SB_0btag_, wei0tagSB);
       	bestHiggsMass.push_back(lljjmassFinal_SB_0btag_);
 	bestHiggsMassNoRefit.push_back( lljjmassFinal_noRefit_SB_0btag_);
-	genHMass.push_back(getInt(genHiggsMass));
+	genHMass.push_back(genMass);
       	bestmjj.push_back(zjjmass_SB0btag_);
       	btagFlag.push_back(0.);
 	if(muChannel) channel.push_back(1.);
@@ -1687,6 +1712,8 @@ int main(int argc, char **argv) {
       	weight.push_back(wei0tagSB*scaleFact);
       	puWeight.push_back(PUWeight);
       	lrWeight.push_back(LRweight);
+	lrWeightErrp.push_back(LRweightErrp);
+	lrWeightErrm.push_back(LRweightErrm);
       	idWeight.push_back(idw0tagSB);
 	trigWeight.push_back(trw0tagSB);
       	lumiWeight.push_back(scaleFact);
@@ -1694,7 +1721,8 @@ int main(int argc, char **argv) {
 	evtNumber.push_back( EvtNum0TagSB_);
 	lumiBlock.push_back( LumiBlock0TagSB_);
       }
-
+      
+      if(njets_!=-1) njets.Fill(njets_,globWeight);  
       if((lljjmass_noRefit_!=0) && exist2tag) 
 	lljjmass_noRefit.Fill(lljjmass_noRefit_,wei2tag);
 
@@ -1739,6 +1767,8 @@ int main(int argc, char **argv) {
     double w;
     double pu_w;
     double lr_w;
+    double lr_p_w;
+    double lr_m_w;
     double id_w;
     double t_w;
     double lumi_w;
@@ -1754,6 +1784,8 @@ int main(int argc, char **argv) {
     lljjmassTree.Branch("weight", &w, "weight/D");
     lljjmassTree.Branch("PUweight", &pu_w, "PUweight/D");
     lljjmassTree.Branch("LRweight", &lr_w, "LRweight/D");
+    lljjmassTree.Branch("LRweightErrp", &lr_p_w, "LRweightErrp/D");
+    lljjmassTree.Branch("LRweightErrm", &lr_m_w, "LRweightErrm/D");
     lljjmassTree.Branch("IDweight", &id_w, "IDweight/D");
     lljjmassTree.Branch("trigweight", &t_w, "trigweight/D");
     lljjmassTree.Branch("lumiweight", &lumi_w, "lumiweight/D");
@@ -1776,6 +1808,8 @@ int main(int argc, char **argv) {
       w = weight[i];
       pu_w = puWeight[i];
       lr_w = lrWeight[i];
+      lr_p_w = lrWeightErrp[i];
+      lr_m_w = lrWeightErrm[i];
       id_w = idWeight[i];
       t_w = trigWeight[i];
       lumi_w = lumiWeight[i];

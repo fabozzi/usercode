@@ -18,20 +18,28 @@ channels = ['Mu', 'El']
 
 runPeriod = "2012All"
 
-ntupleFolder = "edmntpTest"
-#ntupleFolder = "edmntp12Jul12Cleaned"
+#ntupleFolder = "edmntpTest"
+ntupleFolder = "edmntp12Jul12Cleaned"
 
 signalMap = {
    'GluGluToHToZZTo2L2Q_M-200_8TeV': 200,
    'GluGluToHToZZTo2L2Q_M-210_8TeV': 210,
+   'GluGluToHToZZTo2L2Q_M-220_8TeV': 220,
+   'GluGluToHToZZTo2L2Q_M-230_8TeV': 230,
    'GluGluToHToZZTo2L2Q_M-250_8TeV': 250,
    'GluGluToHToZZTo2L2Q_M-275_8TeV': 275,
    'GluGluToHToZZTo2L2Q_M-300_8TeV': 300,
    'GluGluToHToZZTo2L2Q_M-325_8TeV': 325,
    'GluGluToHToZZTo2L2Q_M-350_8TeV': 350,
+   'GluGluToHToZZTo2L2Q_M-375_8TeV': 375,
    'GluGluToHToZZTo2L2Q_M-400_8TeV': 400,
    'GluGluToHToZZTo2L2Q_M-425_8TeV': 425,
+   'GluGluToHToZZTo2L2Q_M-450_8TeV': 450,
+   'GluGluToHToZZTo2L2Q_M-475_8TeV': 475,
    'GluGluToHToZZTo2L2Q_M-500_8TeV': 500,
+   'GluGluToHToZZTo2L2Q_M-525_8TeV': 525,
+   'GluGluToHToZZTo2L2Q_M-550_8TeV': 550,
+   'GluGluToHToZZTo2L2Q_M-575_8TeV': 575,
    'GluGluToHToZZTo2L2Q_M-600_8TeV': 600,
    }
 
@@ -41,7 +49,9 @@ signalMap = {
 #dirname = ['GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-200_8TeV','GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV','GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
 
 #dirname = [  'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV']
-dirname = ['GluGluToHToZZTo2L2Q_M-400_8TeV']
+#dirname = ['GluGluToHToZZTo2L2Q_M-600_8TeV']
+dirname = [ 'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV',  'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-220_8TeV', 'GluGluToHToZZTo2L2Q_M-230_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV',  'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV',  'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV',  'GluGluToHToZZTo2L2Q_M-375_8TeV', 'GluGluToHToZZTo2L2Q_M-400_8TeV','GluGluToHToZZTo2L2Q_M-450_8TeV', 'GluGluToHToZZTo2L2Q_M-500_8TeV', 'GluGluToHToZZTo2L2Q_M-550_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV']
+
 #dirname = [  'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-400_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV', 'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV', 'GluGluToHToZZTo2L2Q_M-425_8TeV']
 
 #dirname = [ 'GluGluToHToZZTo2L2Q_M-400_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV' , 'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV', 'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV']
