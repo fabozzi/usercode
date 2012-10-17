@@ -17,8 +17,8 @@ c1 = ROOT.TCanvas()
 
 
 chain = ROOT.TChain("Events")
-chain.Add("/data3/scratch/users/decosa/Higgs/Summer12/GluGluToHToZZTo2L2Q_M-275_8TeV/edmntp12Jul12Cleaned/h2l2q_ntuple_clean_0.root")
-chain.Add("/data3/scratch/users/decosa/Higgs/Summer12/GluGluToHToZZTo2L2Q_M-275_8TeV/edmntp12Jul12Cleaned/h2l2q_ntuple_clean_1.root")
+chain.Add("/data3/scratch/users/decosa/Higgs/Summer12/GluGluToHToZZTo2L2Q_M-325_8TeV/edmntp12Jul12Cleaned/h2l2q_ntuple_clean_0.root")
+chain.Add("/data3/scratch/users/decosa/Higgs/Summer12/GluGluToHToZZTo2L2Q_M-325_8TeV/edmntp12Jul12Cleaned/h2l2q_ntuple_clean_1.root")
 
 def get2DPlot(var):
     chain.Draw("muHiggszjjMass:"+var+">>histo(80, 225., 425., 60, 70., 110.)","muHiggsMatch == 1", "COL")
@@ -34,10 +34,11 @@ def get2DPlot(var):
     
     latex.DrawLatex(0.1, 0.93, "CMS Simulation 2012");
     latex.DrawLatex(0.79,0.93, "#sqrt{s} = 8 TeV");
-    nameFile = "with_KinFit"
-    if (var=="muHiggsMass"): nameFile = "wo_KinFit"
+    nameFile = "mZ_vs_mH_kinfit"
+    if (var=="muHiggsMass"): nameFile = "mZ_vs_mH"
     c1.Print(nameFile+".png")
     c1.Print(nameFile+".eps")
+    c1.Print(nameFile+".pdf")
 
 
 
