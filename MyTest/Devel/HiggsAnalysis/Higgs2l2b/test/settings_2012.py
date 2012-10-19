@@ -4,8 +4,8 @@ import ROOT
 #data = False
 data = True
 run = 'AB'
-ch = "El"
-#ch = 'Mu'
+#ch = "El"
+ch = 'Mu'
 
 
 #ch = 'El'
@@ -110,6 +110,14 @@ Vars["qgd"] = (2,0.,0.,False, 'Quark-Gluon Discriminant')
 Vars["lljjmass_0btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 0btag")
 Vars["lljjmass_1btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 1btag")
 Vars["lljjmass_2btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 2btag")
+
+if (ch == 'Mu'):Vars["lljjmass_0btag"]=(10, 0., 0., True, "m{#mu#mujj} - 0btag")
+if (ch == 'El'):Vars["lljjmass_0btag"]=(10, 0., 0., True, "m{eejj} - 0btag")
+if (ch == 'Mu'):Vars["lljjmass_1btag"]=(10, 0., 0., True, "m{#mu#mujj} - 1btag")
+if (ch == 'El'):Vars["lljjmass_1btag"]=(10, 0., 0., True, "m{eejj} - 1btag")
+if (ch == 'Mu'):Vars["lljjmass"]=(10, 0., 0., True, "m{#mu#mujj} - 2btag")
+if (ch == 'El'):Vars["lljjmass"]=(10, 0., 0., True, "m{eejj} - 2btag")
+
 
 Vars["lljjmass_sb_all"]=(10, 0., 0., True, "m{lljj} sidebands - allCategories")
 
