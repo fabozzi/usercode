@@ -12,9 +12,9 @@ from HiggsAnalysis.Higgs2l2b.scaleFactors import scale
 ###     - input edmNtuple folder -> ntupleFolder
 ###     - samples on which you want to run -> dirnames
 
-channels = ['Mu', 'El']
+#channels = ['Mu', 'El']
 #channels = ['El']
-#channels = ['Mu']
+channels = ['Mu']
 
 runPeriod = "2012All"
 
@@ -50,14 +50,14 @@ signalMap = {
 
 #dirname = [  'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV']
 #dirname = ['GluGluToHToZZTo2L2Q_M-600_8TeV']
-dirname = [ 'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV',  'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-220_8TeV', 'GluGluToHToZZTo2L2Q_M-230_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV',  'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV',  'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV',  'GluGluToHToZZTo2L2Q_M-375_8TeV', 'GluGluToHToZZTo2L2Q_M-400_8TeV','GluGluToHToZZTo2L2Q_M-450_8TeV', 'GluGluToHToZZTo2L2Q_M-500_8TeV', 'GluGluToHToZZTo2L2Q_M-550_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV']
+#dirname = [ 'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV',  'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-220_8TeV', 'GluGluToHToZZTo2L2Q_M-230_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV',  'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV',  'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV',  'GluGluToHToZZTo2L2Q_M-375_8TeV', 'GluGluToHToZZTo2L2Q_M-400_8TeV','GluGluToHToZZTo2L2Q_M-450_8TeV', 'GluGluToHToZZTo2L2Q_M-500_8TeV', 'GluGluToHToZZTo2L2Q_M-550_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV']
 
 #dirname = [  'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-400_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV', 'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV', 'GluGluToHToZZTo2L2Q_M-425_8TeV']
 
 #dirname = [ 'GluGluToHToZZTo2L2Q_M-400_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV' , 'GluGluToHToZZTo2L2Q_M-210_8TeV', 'GluGluToHToZZTo2L2Q_M-250_8TeV', 'GluGluToHToZZTo2L2Q_M-275_8TeV', 'GluGluToHToZZTo2L2Q_M-325_8TeV', 'GluGluToHToZZTo2L2Q_M-350_8TeV']
 
 #dirname = [ 'DYJetsToLL_M-50']
-#dirname = [  'MuRun2012A', 'MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext', 'ElRun2012B', 'ElRun2012B_Ext','ElRun2012A', 'ElRun2012A_23May2012']
+dirname = [  'MuRun2012A', 'MuRun2012B', 'MuRun2012B_Ext']
 #dirname = ['MuRun2012B_Ext']
 #dirname = ['TT', 'ZZ', 'WZ']
 #dirname = [ 'ElRun2012B', 'ElRun2012B_Ext','ElRun2012A', 'ElRun2012A_23May2012']

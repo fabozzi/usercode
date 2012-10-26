@@ -16,10 +16,11 @@ normalizeToData = True
 
 
 
-folder = "26Sept_5fb"+ch+"Channel/"
+folder = "26Oct"+ch+"Channel/"
 
 
 samples = [ "WW", "WZ", "ZZ", "TT", "DYJetsToLL_M-50"]
+#samples = [ "WW", "WZ", "ZZ", "TT", "DY0", "DY1", "DY2", "DY3", "DY4"]
 #samples = [ "WW", "WZ",  'T-tW', 'Tbar-tW',"ZZ", "TT", "DYJets"]
 
 
@@ -107,16 +108,27 @@ if (ch == 'El'):Vars["npv_woReweight"] = (1,0.,0.,False, '# of primary vertexes 
 Vars["qgd"] = (2,0.,0.,False, 'Quark-Gluon Discriminant')
 
 #Vars["npv2"] = (1,0.,0.,False)
-Vars["lljjmass_0btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 0btag")
-Vars["lljjmass_1btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 1btag")
-Vars["lljjmass_2btagSB"]=(10, 0., 0., True, "m{lljj} sidebands - 2btag")
+if (ch == 'Mu'):Vars["lljjmass_0btagSB"]=(10, 0., 0., True, "m_{#mu#mujj} sidebands - 0btag")
+if (ch == 'El'):Vars["lljjmass_0btagSB"]=(10, 0., 0., True, "m_{eejj} sidebands - 0btag")
+if (ch == 'Mu'):Vars["lljjmass_1btagSB"]=(10, 0., 0., True, "m_{#mu#mujj} sidebands - 1btag")
+if (ch == 'El'):Vars["lljjmass_1btagSB"]=(10, 0., 0., True, "m_{eejj} sidebands - 1btag")
+if (ch == 'Mu'):Vars["lljjmass_2btagSB"]=(20, 0., 0., True, "m_{#mu#mujj} sidebands - 2btag")
+if (ch == 'El'):Vars["lljjmass_2btagSB"]=(20, 0., 0., True, "m_{eejj} sidebands - 2btag")
 
-if (ch == 'Mu'):Vars["lljjmass_0btag"]=(10, 0., 0., True, "m{#mu#mujj} - 0btag")
-if (ch == 'El'):Vars["lljjmass_0btag"]=(10, 0., 0., True, "m{eejj} - 0btag")
-if (ch == 'Mu'):Vars["lljjmass_1btag"]=(10, 0., 0., True, "m{#mu#mujj} - 1btag")
-if (ch == 'El'):Vars["lljjmass_1btag"]=(10, 0., 0., True, "m{eejj} - 1btag")
-if (ch == 'Mu'):Vars["lljjmass"]=(10, 0., 0., True, "m{#mu#mujj} - 2btag")
-if (ch == 'El'):Vars["lljjmass"]=(10, 0., 0., True, "m{eejj} - 2btag")
+## if (ch == 'Mu'):Vars["lljjmass_0btag"]=(10, 0., 0., True, "m_{#mu#mujj} - 0btag")
+## if (ch == 'El'):Vars["lljjmass_0btag"]=(10, 0., 0., True, "m_{eejj} - 0btag")
+## if (ch == 'Mu'):Vars["lljjmass_1btag"]=(10, 0., 0., True, "m_{#mu#mujj} - 1btag")
+## if (ch == 'El'):Vars["lljjmass_1btag"]=(10, 0., 0., True, "m_{eejj} - 1btag")
+## if (ch == 'Mu'):Vars["lljjmass"]=(20, 0., 0., True, "m_{#mu#mujj} - 2btag")
+## if (ch == 'El'):Vars["lljjmass"]=(20, 0., 0., True, "m_{eejj} - 2btag")
+
+
+if (ch == 'Mu'):Vars["lljjmass_0btag"]=(10, 0., 0., False, "m_{#mu#mujj} - 0btag")
+if (ch == 'El'):Vars["lljjmass_0btag"]=(10, 0., 0., False, "m_{eejj} - 0btag")
+if (ch == 'Mu'):Vars["lljjmass_1btag"]=(20, 0., 0., False, "m_{#mu#mujj} - 1btag")
+if (ch == 'El'):Vars["lljjmass_1btag"]=(20, 0., 0., False, "m_{eejj} - 1btag")
+if (ch == 'Mu'):Vars["lljjmass"]=(40, 0., 0., False, "m_{#mu#mujj} - 2btag")
+if (ch == 'El'):Vars["lljjmass"]=(40, 0., 0., False, "m_{eejj} - 2btag")
 
 
 Vars["lljjmass_sb_all"]=(10, 0., 0., True, "m{lljj} sidebands - allCategories")

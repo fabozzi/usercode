@@ -8,16 +8,17 @@ import string
 
 
 
-inputpath = '/afs/cern.ch/work/d/decosa/private/Higgs/Summer12/'
+inputpath = '/data3/scratch/users/decosa/Higgs/Summer12/'
 #outpath = '/data3/scratch/users/decosa/Higgs/TestSummer12/'
-ntpdir = '/edmntp12Jul12Cleaned/'
-
+#ntpdir = '/edmntp22Jun12/'
+ntpdir = '/edmntp26Oct12/'
 
 #inputpath = '/data3/scratch/users/fabozzi/Higgs/Summer12/'
 #ntpdir = '/edmntp26Jun12/'
-outpath = '/afs/cern.ch/work/d/decosa/private/Higgs/Summer12/'
+outputpath = '/data3/scratch/users/decosa/Higgs/Summer12/'
 #outputpath =  '/tmp/decosa/Higgs/Summer12/'
-ntpdirout = '/edmntp12Jul12Cleaned/'
+#ntpdirout = '/edmntp12Jul12Cleaned/'
+ntpdirout = '/edmntp26Oct12Cleaned/'
 
 #ntpdir = '/edmntpTest/'
 #ntpdirout = '/edmntpCleanedTest/'
@@ -29,10 +30,10 @@ ntpdirout = '/edmntp12Jul12Cleaned/'
 #dirnames =  ['ElRun2012A', 'ElRun2012B']
 #dirnames = ['ElRun2012A','ElRun2012A_23May2012', 'ElRun2012B', 'ElRun2012B_Ext', 'MuRun2012A','MuRun2012A_23May2012', 'MuRun2012B', 'MuRun2012B_Ext' ]
 #dirnames = ['GluGluToHToZZTo2L2Q_M-200_8TeV', 'GluGluToHToZZTo2L2Q_M-300_8TeV', 'GluGluToHToZZTo2L2Q_M-525_8TeV', 'GluGluToHToZZTo2L2Q_M-600_8TeV', 'GluGluToHToZZTo2L2Q_M-700_8TeV', 'GluGluToHToZZTo2L2Q_M-800_8TeV', 'GluGluToHToZZTo2L2Q_M-900_8TeV']
-#dirnames =  ['MuRun2012A']
+dirnames =  ['ElRun2012B_Ext']
 #dirnames =  ['DYJetsToLL_M-50', 'TT', 'WZ', 'ZZ']
 
-dirnames =  ['DYJetsToLL_M-50']
+#dirnames =  ['DY1', 'DY2', 'DY3', 'DY4']
 
 #dirnames =  ['GluGluToHToZZTo2L2Q_M-300', 'GluGluToHToZZTo2L2Q_M-200']
 

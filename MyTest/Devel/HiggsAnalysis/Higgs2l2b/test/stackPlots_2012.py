@@ -11,6 +11,7 @@ ROOT.gROOT.Reset();
 ROOT.gROOT.SetStyle('Plain')
 
 ROOT.gROOT.SetBatch()        # don't pop up canvases
+ROOT.TH1.SetDefaultSumw2()
 
 
 if(run == 'A'):intLumi = lumiA
@@ -29,8 +30,7 @@ os.system(cmd)
 
 sigSamples = ["GluGluToHToZZTo2L2Q_M-350_8TeV"]
 
-drawSignal= True
-
+drawSignal= False
 def makePlot(varKey):
 
     norm = 0
@@ -52,9 +52,12 @@ def makePlot(varKey):
 
     hs = ROOT.THStack("hs",var)
  
-    all_hist = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root"if ch!="All" else "NoNorm_El/" + s+"EdmNtp.root").Get(var)) for s in samples])
+    all_hist = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in samples])
     [h.Rebin(rebin) for h in all_hist.values()]
     [h.Scale(scale[k]) for k, h in all_hist.iteritems()]
+    ## for s in samples:
+    ##     print s, scale[s]
+        
 
     sig_samples = dict([ (s, ROOT.TFile.Open("NoNorm_"+ch+"/" + s+"EdmNtp.root").Get(var)) for s in sigSamples])
     [h.Rebin(rebin) for h in sig_samples.values()]
@@ -66,6 +69,23 @@ def makePlot(varKey):
         [h.Scale(scale[k]) for k, h in all_hist_2.iteritems()]
         [h.Add(h2) for h,h2 in zip(all_hist.itervalues(), all_hist_2.itervalues()) ]
 
+
+    ## if("DY0" in samples and "DY1" in samples and "DY2" in samples and "DY3" in samples and "DY4" in samples):
+    ##     all_hist["DYJetsToLL"] = all_hist["DY0"]
+    ##     all_hist["DYJetsToLL"].Add(all_hist["DY1"])
+    ##     all_hist["DYJetsToLL"].Add(all_hist["DY2"])
+    ##     all_hist["DYJetsToLL"].Add(all_hist["DY3"])
+    ##     all_hist["DYJetsToLL"].Add(all_hist["DY4"])
+   
+    
+    #sampleNew = list(samples)
+    ##     sampleNew.remove("DY0")
+    ##     sampleNew.remove("DY1")
+    ##     sampleNew.remove("DY2")
+    ##     sampleNew.remove("DY3")
+    ##     sampleNew.remove("DY4")
+    ##     sampleNew.append("DYJetsToLL")
+        
     ### Evaluate number of events after the selection
     
 
@@ -211,9 +231,14 @@ def makePlot(varKey):
     if(logScale):
         c1.Print(name + "_LOG.eps")
         c1.Print(name + "_LOG.png")
+        c1.Print(name + "_LOG.pdf")
+        c1.Print(name + "_LOG.C")
     else:
         c1.Print(name + ".eps")
         c1.Print(name + ".png")
+        c1.Print(name + ".pdf")
+        c1.Print(name + ".C")
+        
 
 # make plots for all variables in vars
 map(makePlot, Vars.keys())
