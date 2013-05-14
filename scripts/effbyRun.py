@@ -20,23 +20,22 @@ ntotruns = len(rpcRuns)
 
 aveEffRuns = []
 aveEffErrors = []
-runErrors = []
+
 for y in range(0, ntotruns):
     aveEffRuns.append(0.0)
     aveEffErrors.append(0.0)
-    runErrors.append(0.0)
+
 print rpcRuns
 #print aveEffRuns
-
 #print ntotruns
 
 # This is the run number under study (actually one should loop over runs
 runNum = 163269
-aveEffInRun = 0.0 
-aveEffErrorInRun = 0.0 
-
 runNumIndex = rpcRuns.index( runNum )
 #print runNumIndex
+
+aveEffInRun = 0.0 
+aveEffErrorInRun = 0.0 
 
 # plot eff for 1 or more chambers
 
@@ -53,7 +52,7 @@ runNumIndex = rpcRuns.index( runNum )
 
 # rolls = ['Forward', 'Middle', 'Backward', 'A', 'B', 'C']
 
-wheels =['W-2']
+wheels =['W-2',]
 stations =['RB1']
 sectors =['S12']
 rolls =['Forward']
@@ -73,10 +72,6 @@ for chamber in blackListFile:
 #    print chamber
     badChambers.append(chamber)
 #print badChambers
-
-#while 1:
-#    chamber = blackListFile.readline().rstrip()
-#    print chamber
 
 # dictionaries to load eff/errors for selected chambers 
 eff_map = {}
@@ -100,6 +95,7 @@ infile = open(inputEffFile, "r")
 
 # counter of good chambers considered for the efficiencies
 ngoodChambers = 0
+
 # looping on chambers in input file
 while 1:
     line = infile.readline()
@@ -158,37 +154,19 @@ aveEffErrors[runNumIndex] = aveEffErrorInRun
 
 #print aveEffRuns
 #print aveEffErrors
-#print runErrors
+
 # printout dictionaries
 print eff_map
 print err_map
 
-
-# define graph with average eff. vs. run
-#t_rpcRuns = ROOT.TVector(ntotruns)
-#t_aveEffRuns = ROOT.TVector(ntotruns)
-#t_runErrors = ROOT.TVector(ntotruns)
-#t_aveEffErrors = ROOT.TVector(ntotruns)
 
 for m in range(0, ntotruns) :
     h_effruns.SetBinContent(m+1,aveEffRuns[m])
     h_effruns.SetBinError(m+1,aveEffErrors[m])
     if m%50 == 0 :
         h_effruns.GetXaxis().SetBinLabel(m+1,str(rpcRuns[m]))
-#    t_rpcRuns[m] = rpcRuns[m]
-#    t_aveEffRuns[m] = aveEffRuns[m]
-#    t_runErrors[m] = 0.0
-#    t_aveEffErrors[m] = aveEffErrors[m]
-
-
-#c_eff = ROOT.TCanvas("effruns", "effruns")
-#myheff = c_eff.DrawFrame(1632680 0, 209160, 110)
-#g_effbyrun = ROOT.TGraphErrors(t_rpcRuns, t_aveEffRuns, t_runErrors, t_aveEffErrors)
-#g_effbyrun.SetName("effruns")
-#g_effbyrun.SetTitle("effruns")
-
 
 h_effdistr.Write()
 h_effruns.Write()
-#g_effbyrun.Write()
+
 rfile_out.Close()    
