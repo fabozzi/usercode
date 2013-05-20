@@ -196,95 +196,19 @@ aveEffErrors[runNumIndex] = aveEffErrorInRun
 print aveEffRuns
 print aveEffErrors
 
+for m in range(0, ntotruns) :
+    h_effruns.SetBinContent(m+1,aveEffRuns[m])
+    h_effruns.SetBinError(m+1,aveEffErrors[m])
+    if m%50 == 0 :
+        h_effruns.GetXaxis().SetBinLabel(m+1,str(rpcRuns[m]))
 
-#for m in range(0, ntotruns) :
-#    h_effruns.SetBinContent(m+1,aveEffRuns[m])
-#    h_effruns.SetBinError(m+1,aveEffErrors[m])
-#    if m%50 == 0 :
-#        h_effruns.GetXaxis().SetBinLabel(m+1,str(rpcRuns[m]))
-#
 
 h_effdistr.Write()
-#h_effruns.Write()
+h_effruns.Write()
 #
 
 rfile_out.Close()    
 
-# dictionaries to load eff/errors for selected chambers 
-#eff_map = {}
-#err_map = {}
-
-# output file with eff histogram
-#rfile_out = ROOT.TFile.Open("output_eff.root","RECREATE")
-#                wheelN = wheel.replace("+","p")
-#                wheelNm = wheelN.replace("-","m")
-#                stationN= station.replace("+","p") 
-#                stationNm= stationN.replace("-","m") 
-#hname = "eff_"+wheelNm+"_"+stationNm+"_"+sector+"_"+roll
-#hname = "eff"
-
-#input fileName with chambers performances
-#inputEffFile = str(runNum)+"_rollYeff.txt"
-#infile = open(inputEffFile, "r")
-
-# counter of good chambers considered for the efficiencies
-#ngoodChambers = 0
-
-# looping on chambers in input file
-#while 1:
-#    line = infile.readline()
-#    newline = line.rstrip()    
-#    if newline.startswith("eff"):
-#        break;
-#    print newline
-#    subpieces = newline.split(' ')
-#    chamberID = subpieces[0]
-# check if it is a bad chamber: if so, skip the chamber in the loop    
-#    isBadChamber = False
-#    for badcham in badChambers :
-#        if chamberID == badcham :
-#            isBadChamber = True
-#            break
-#    if isBadChamber == True :
-#        continue
-#######
-#    idparts = chamberID.split('_')
-#    whID = idparts[0]
-#    statID = idparts[1]
-#    sectID = idparts[2]
-#    rollID = idparts[3]
-#    statID = statID.rstrip('inout+-')
-# checking if that chamber in input file matches one of the chambers to study
-#    for wheel in wheels:
-#        for station in stations:
-#            for sector in sectors:
-#                for roll in rolls:
-#                    matchwh = allwh or (whID==wheel) 
-#                    matchstat = allstat or (statID==station) 
-#                    matchsect = allsect or (sectID==sector) 
-#                    matchroll = allrolls or (rollID==roll) 
-#    print matchwh, matchstat, matchsect, matchroll
-#                    if (matchwh and matchstat and matchsect and matchroll):
-#                        effcham = float(subpieces[1])
-#                        errcham = float(subpieces[2])
-#                        eff_map[chamberID]=effcham
-#                        err_map[chamberID]=errcham
-## filling histogram with efficiency for that chamber
-#                        h_effdistr.Fill(effcham)
-#                        aveEffInRun = aveEffInRun + effcham 
-#                        aveEffErrorInRun = aveEffErrorInRun + errcham * errcham 
-#                        ngoodChambers = ngoodChambers+1
-#    
-#print ngoodChambers
-#aveEffInRun = aveEffInRun / float(ngoodChambers)
-#aveEffErrorInRun = math.sqrt(aveEffErrorInRun) / float(ngoodChambers)
-#print aveEffInRun
-#print aveEffErrorInRun
-#
-
-# printout dictionaries
-#print eff_map
-#print err_map
 
 
 
