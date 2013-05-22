@@ -42,9 +42,13 @@ for chambEntry in chambDictFile:
     chambID = chambEntry.rstrip().split(' ')
     chambDict[ chambID[1] ] = chambID[0]
 
-print chambCounter
-print len(chambDict)
+#print chambCounter
+#print len(chambDict)
 #print chambDict
+############################################################
+
+# flag to remove badchambers 
+removeBadRolls = True
 ############################################################
 
 # fill the list of bad chambers from input blacklist
@@ -78,17 +82,14 @@ for y in range(0, ntotruns):
 #print aveEffRuns
 #print ntotruns
 
-# This is the run number under study (actually one should loop over runs
-#runNum = 163269
-runNum = 190679
-runNumIndex = rpcRuns.index( runNum )
-#print runNumIndex
+firstRun = 190679
+lastRun = 194076
 
-# temporary variables
-aveEffInRun = 0.0 
-aveEffErrorInRun = 0.0 
+runNumIndexFirst = rpcRuns.index( firstRun )
+runNumIndexLast = rpcRuns.index( lastRun )
 
-# plot eff for 1 or more chambers
+
+
 
 # Specify the list of chambers to consider
 
@@ -104,27 +105,24 @@ aveEffErrorInRun = 0.0
 # rolls = ['Forward', 'Middle', 'Backward', 'A', 'B', 'C']
 
 # all barrel
-#wheels = ['W+2', 'W+1', 'W+0', 'W-1', 'W-2']
-#stations = ['RB1', 'RB2', 'RB3', 'RB4']
-#stat_postfixes = ['', 'in', 'out', '+', '-', '++', '--']
-#sectors = ['S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12']
-#rolls = ['Forward','Middle','Backward']
-#
-#fileoutpostfix = 'barrel'
+wheels = ['W+2', 'W+1', 'W+0', 'W-1', 'W-2']
+stations = ['RB1', 'RB2', 'RB3', 'RB4']
+stat_postfixes = ['', 'in', 'out', '+', '-', '++', '--']
+sectors = ['S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12']
+rolls = ['Forward','Middle','Backward']
+
+fileoutpostfix = 'barrel'
 
 # all endcap
-wheels = ['RE-3', 'RE-2', 'RE-1', 'RE+1', 'RE+2', 'RE+3']
-stations = ['R1', 'R2', 'R3']
-stat_postfixes = ['', 'in', 'out', '+', '-', '++', '--']
-sectors = ['CH01', 'CH02', 'CH03', 'CH04', 'CH05', 'CH06', 'CH07', 'CH08', 'CH09', 'CH10', 'CH11', 'CH12',
-           'CH13', 'CH14', 'CH15', 'CH16', 'CH17', 'CH18', 'CH19', 'CH20', 'CH21', 'CH22', 'CH23', 'CH24',
-           'CH25', 'CH26', 'CH27', 'CH28', 'CH29', 'CH30', 'CH31', 'CH32', 'CH33', 'CH34', 'CH35', 'CH36']
-rolls = ['A', 'B', 'C']
-fileoutpostfix = 'endcap'
+#wheels = ['RE-3', 'RE-2', 'RE-1', 'RE+1', 'RE+2', 'RE+3']
+#stations = ['R1', 'R2', 'R3']
+#stat_postfixes = ['', 'in', 'out', '+', '-', '++', '--']
+#sectors = ['CH01', 'CH02', 'CH03', 'CH04', 'CH05', 'CH06', 'CH07', 'CH08', 'CH09', 'CH10', 'CH11', 'CH12',
+#           'CH13', 'CH14', 'CH15', 'CH16', 'CH17', 'CH18', 'CH19', 'CH20', 'CH21', 'CH22', 'CH23', 'CH24',
+#           'CH25', 'CH26', 'CH27', 'CH28', 'CH29', 'CH30', 'CH31', 'CH32', 'CH33', 'CH34', 'CH35', 'CH36']
+#rolls = ['A', 'B', 'C']
+#fileoutpostfix = 'endcap'
 
-
-
-outfilename = 'output_eff_'+fileoutpostfix+'.root'
 
 # vector to store rawID of chambers under study
 # it will be used to get efficiencies
@@ -137,73 +135,98 @@ for wheel in wheels:
             for sector in sectors:
                 for roll in rolls:
                     chambName = wheel+'_'+station+stat_postfix+'_'+sector+'_'+roll
-                    print chambName
+#                    print chambName
                     # check if the chamber name exists                     
                     if (chambName in chambDict):
-                        print 'Chamber exists!'
+#                        print 'Chamber exists!'
                         # check if it is a bad chamber: if so, skip the chamber in the loop    
                         isBadChamber = False
-                        for badcham in badChambers :
-                            if chambName == badcham :
-                                isBadChamber = True
-                                print 'BAD CHAMBER!!!'
-                                break
+                        if removeBadRolls :
+                            for badcham in badChambers :
+                                if chambName == badcham :
+                                    isBadChamber = True
+#                                    print 'BAD CHAMBER!!!'
+                                    break
                         if not(isBadChamber) :
                             # get the Raw ID of the chamber
                             chambRawID = chambDict[chambName]
-                            print chambRawID
+#                            print chambRawID
                             rawIds.append(chambRawID)
 
 
-print rawIds
+#print rawIds
+
+outfilename = 'output_eff_'+fileoutpostfix+'.root'
+
 
 rfile_in = ROOT.TFile.Open("TestFile.root")
 
 dbTree = rfile_in.Get("DBTree")
-
-rfile_out = ROOT.TFile.Open(outfilename,"RECREATE")
-h_effdistr = ROOT.TH1F("eff","eff",1600, 0, 100) 
-h_effruns = ROOT.TH1F("effruns","effruns",ntotruns, 0.5, ntotruns+0.5) 
-
-# now loop on the TTree to manipulate efficiencies
 # get the branch variables
 rpcefficiency = RpcEffStruct()
 dbTree.SetBranchAddress("rpcefficiency", AddressOf(rpcefficiency, "run_number") )
 
-ngoodChambers = 0
-
-for i in xrange(dbTree.GetEntries()):
-    dbTree.GetEntry(i)
-#    print runNum
-#    print int(rpcefficiency.run_number)
-    if ( int(rpcefficiency.run_number) == runNum ) :
-        for id in rawIds :
-            if (id == str(int(rpcefficiency.raw_id))) :
-#                print id, int(rpcefficiency.raw_id) 
-#                print rpcefficiency.raw_id, rpcefficiency.eff_seg
-                effcham = rpcefficiency.eff_seg
-                errcham = rpcefficiency.eff_seg_error
-                if errcham > 0 :
-                    h_effdistr.Fill(effcham) 
-                    aveEffInRun = aveEffInRun + effcham 
-                    aveEffErrorInRun = aveEffErrorInRun + errcham * errcham 
-                    ngoodChambers = ngoodChambers+1                
+rfile_out = ROOT.TFile.Open(outfilename,"RECREATE")
+h_effruns = ROOT.TH1F("effruns","effruns",ntotruns, 0.5, ntotruns+0.5) 
 
 
-#    
 
-aveEffInRun = aveEffInRun / float(ngoodChambers)
-aveEffErrorInRun = math.sqrt(aveEffErrorInRun) / float(ngoodChambers)
-print aveEffInRun
-print aveEffErrorInRun
+for myRunInd in range(runNumIndexFirst, runNumIndexLast+1) :
+    runNum = rpcRuns[ myRunInd ]
+    runNumIndex = myRunInd
+    print 'analyzing run ', runNum
+    h_effdistr = ROOT.TH1F("eff"+str(runNum),"eff"+str(runNum),1600, 0, 100) 
 
-                    
-aveEffRuns[runNumIndex] = aveEffInRun
-aveEffErrors[runNumIndex] = aveEffErrorInRun
+# This is the run number under study (actually one should loop over runs
+#runNum = 163269
+#runNum = 190679
+#runNumIndex = rpcRuns.index( runNum )
+#print runNumIndex
+
+# temporary variables
+    aveEffInRun = 0.0 
+    aveEffErrorInRun = 0.0 
+
+# plot eff for 1 or more chambers
+
+# now loop on the TTree to manipulate efficiencies
+
+    ngoodChambers = 0
+
+    for i in xrange(dbTree.GetEntries()):
+        dbTree.GetEntry(i)
+        #    print runNum
+        #    print int(rpcefficiency.run_number)
+        if ( int(rpcefficiency.run_number) == runNum ) :
+            for id in rawIds :
+                if (id == str(int(rpcefficiency.raw_id))) :
+                    #                print id, int(rpcefficiency.raw_id) 
+                    #                print rpcefficiency.raw_id, rpcefficiency.eff_seg
+                    effcham = rpcefficiency.eff_seg
+                    errcham = rpcefficiency.eff_seg_error
+                    if errcham > 0 :
+                        h_effdistr.Fill(effcham) 
+                        aveEffInRun = aveEffInRun + effcham 
+                        aveEffErrorInRun = aveEffErrorInRun + errcham * errcham 
+                        ngoodChambers = ngoodChambers+1                
+                        
+                        
+                        #    
+
+    aveEffInRun = aveEffInRun / float(ngoodChambers)
+    aveEffErrorInRun = math.sqrt(aveEffErrorInRun) / float(ngoodChambers)
+    print aveEffInRun
+    print aveEffErrorInRun
+    
+    
+    aveEffRuns[runNumIndex] = aveEffInRun
+    aveEffErrors[runNumIndex] = aveEffErrorInRun
+    h_effdistr.Write()
+    
 
 print aveEffRuns
 print aveEffErrors
-
+                        
 for m in range(0, ntotruns) :
     h_effruns.SetBinContent(m+1,aveEffRuns[m])
     h_effruns.SetBinError(m+1,aveEffErrors[m])
@@ -211,7 +234,7 @@ for m in range(0, ntotruns) :
         h_effruns.GetXaxis().SetBinLabel(m+1,str(rpcRuns[m]))
 
 
-h_effdistr.Write()
+#h_effdistr.Write()
 h_effruns.Write()
 #
 
