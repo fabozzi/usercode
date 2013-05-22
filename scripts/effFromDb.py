@@ -103,11 +103,28 @@ aveEffErrorInRun = 0.0
 
 # rolls = ['Forward', 'Middle', 'Backward', 'A', 'B', 'C']
 
-wheels =['W-2',]
-stations =['RB1']
-stat_postfixes =['', 'in', 'out', '+', '-', '++', '--']
-sectors =['S12']
-rolls =['Forward','Middle','Backward']
+# all barrel
+#wheels = ['W+2', 'W+1', 'W+0', 'W-1', 'W-2']
+#stations = ['RB1', 'RB2', 'RB3', 'RB4']
+#stat_postfixes = ['', 'in', 'out', '+', '-', '++', '--']
+#sectors = ['S01', 'S02', 'S03', 'S04', 'S05', 'S06', 'S07', 'S08', 'S09', 'S10', 'S11', 'S12']
+#rolls = ['Forward','Middle','Backward']
+#
+#fileoutpostfix = 'barrel'
+
+# all endcap
+wheels = ['RE-3', 'RE-2', 'RE-1', 'RE+1', 'RE+2', 'RE+3']
+stations = ['R1', 'R2', 'R3']
+stat_postfixes = ['', 'in', 'out', '+', '-', '++', '--']
+sectors = ['CH01', 'CH02', 'CH03', 'CH04', 'CH05', 'CH06', 'CH07', 'CH08', 'CH09', 'CH10', 'CH11', 'CH12',
+           'CH13', 'CH14', 'CH15', 'CH16', 'CH17', 'CH18', 'CH19', 'CH20', 'CH21', 'CH22', 'CH23', 'CH24',
+           'CH25', 'CH26', 'CH27', 'CH28', 'CH29', 'CH30', 'CH31', 'CH32', 'CH33', 'CH34', 'CH35', 'CH36']
+rolls = ['A', 'B', 'C']
+fileoutpostfix = 'endcap'
+
+
+
+outfilename = 'output_eff_'+fileoutpostfix+'.root'
 
 # vector to store rawID of chambers under study
 # it will be used to get efficiencies
@@ -139,31 +156,21 @@ for wheel in wheels:
 
 
 print rawIds
-selchamb = ''
-for id in rawIds :
-    selchamb = selchamb + '(rpcefficiency.raw_id == ' + id + ')' + ' || '
-    print selchamb
-print selchamb
-selchamb = selchamb.rstrip('| ')
-print selchamb
 
-allselection = '('+selchamb+')&&(rpcefficiency.run_number=='+str(runNum)+')'
-print allselection
 rfile_in = ROOT.TFile.Open("TestFile.root")
 
 dbTree = rfile_in.Get("DBTree")
 
-rfile_out = ROOT.TFile.Open("output_eff.root","RECREATE")
+rfile_out = ROOT.TFile.Open(outfilename,"RECREATE")
 h_effdistr = ROOT.TH1F("eff","eff",1600, 0, 100) 
 h_effruns = ROOT.TH1F("effruns","effruns",ntotruns, 0.5, ntotruns+0.5) 
-
-# just make a plot 
-dbTree.Project("eff","rpcefficiency.eff_seg",allselection)
 
 # now loop on the TTree to manipulate efficiencies
 # get the branch variables
 rpcefficiency = RpcEffStruct()
 dbTree.SetBranchAddress("rpcefficiency", AddressOf(rpcefficiency, "run_number") )
+
+ngoodChambers = 0
 
 for i in xrange(dbTree.GetEntries()):
     dbTree.GetEntry(i)
@@ -172,20 +179,21 @@ for i in xrange(dbTree.GetEntries()):
     if ( int(rpcefficiency.run_number) == runNum ) :
         for id in rawIds :
             if (id == str(int(rpcefficiency.raw_id))) :
-                print id, int(rpcefficiency.raw_id) 
-                print rpcefficiency.raw_id, rpcefficiency.eff_seg
+#                print id, int(rpcefficiency.raw_id) 
+#                print rpcefficiency.raw_id, rpcefficiency.eff_seg
                 effcham = rpcefficiency.eff_seg
                 errcham = rpcefficiency.eff_seg_error
-                aveEffInRun = aveEffInRun + effcham 
-                aveEffErrorInRun = aveEffErrorInRun + errcham * errcham 
-
-#                        ngoodChambers = ngoodChambers+1                
+                if errcham > 0 :
+                    h_effdistr.Fill(effcham) 
+                    aveEffInRun = aveEffInRun + effcham 
+                    aveEffErrorInRun = aveEffErrorInRun + errcham * errcham 
+                    ngoodChambers = ngoodChambers+1                
 
 
 #    
-print len(rawIds)
-aveEffInRun = aveEffInRun / float( len(rawIds) )
-aveEffErrorInRun = math.sqrt(aveEffErrorInRun) / float(len(rawIds))
+
+aveEffInRun = aveEffInRun / float(ngoodChambers)
+aveEffErrorInRun = math.sqrt(aveEffErrorInRun) / float(ngoodChambers)
 print aveEffInRun
 print aveEffErrorInRun
 
